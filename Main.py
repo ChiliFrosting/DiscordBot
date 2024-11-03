@@ -9,7 +9,7 @@ import os
 from dotenv import load_dotenv
 
 #load env variables
-load_dotenv()
+load_dotenv(override= True)
 
 #Bot Token
 token = os.getenv("BOT_TOKEN")
@@ -22,12 +22,12 @@ intents.members = True
 bot = commands.Bot(intents = intents)
 
 #Relevant Guild/Server/Channel IDs
-guild_id = os.getenv("SERVER_ID")
+guild_id = 849857597658103848
 verification_channel_name = os.getenv("VERIFY_CHANNEL_NAME")
-verification_channel_id = os.getenv("VERIFY_CHANNEL_ID")
+verification_channel_id = 1294760925617717373
 verification_channel_url = os.getenv("VERIFY_CHANNEL_URL")
-mod_channel = os.getenv("ADMIN_CHANNEL")
-bot_status_channel = os.getenv("STATUS_CHANNEL")
+mod_channel = 1294760925617717373
+bot_status_channel = 1294760925617717373
 
 #Bot handled roles
 verified_role_id = os.getenv("ROLE_ID")
