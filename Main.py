@@ -35,6 +35,9 @@ verified_role_name = os.getenv("ROLE_NAME")
 mod_role_id = os.getenv("ADMIN_ROLE_ID")
 mod_role_name = os.getenv("ADMIN_ROLE_NAME")
 
+#extensions
+
+
 #Initialization, status messages & presence
 @bot.event
 async def on_ready():
