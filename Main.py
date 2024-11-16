@@ -35,7 +35,14 @@ verified_role_name = os.getenv("ROLE_NAME")
 mod_role_id = os.getenv("ADMIN_ROLE_ID")
 mod_role_name = os.getenv("ADMIN_ROLE_NAME")
 
-#extensions
+#loading extensions
+try:
+    for filename in os.listdir("./cogs"):
+        if filename.endswith(".py"):
+            bot.load_extension(f"cogs.{filename[:-3]}")
+    modules = True
+except: 
+    modules = False
 
 
 #Initialization, status messages & presence
@@ -44,6 +51,10 @@ async def on_ready():
     await bot.change_presence(activity= nextcord.Streaming(name= "from the Twilight zone", url= "https://www.twitch.tv/channel_name"))
     print(f"Logged in as {bot.user}") 
     await bot.get_channel(bot_status_channel).send("Bot is ready!\n" f"Logged in as {bot.user}") 
+    if modules == True: 
+        await bot.get_channel(bot_status_channel).send("Modules Loaded!")
+    elif modules == False:
+        await bot.get_channel(bot_status_channel).send("No Modules Loaded!")
 
 #Member joining server event, sends welcome message in system channel (if set) & notify moderators
 @bot.event
