@@ -1,10 +1,16 @@
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
 
 
+client_id= os.getenv("twitch_client_id")
+client_secret= os.getenv("twitch_client_secret")
 
 url= "https://id.twitch.tv/oauth2/token"
-parameters= {"client_id": "gnltd0pal01dzp6uxogo36s83v4ygm",
-         "client_secret": "02t86cqy6e1amyzur8wy9b891qyfu6",
+parameters= {"client_id": client_id,
+         "client_secret": client_secret,
          "grant_type": "client_credentials"}
 
 response= requests.post(url, parameters)

@@ -1,10 +1,16 @@
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv(override= True)
 
 
+token= os.getenv("twitch_oauth_token")
+client_id= os.getenv("twitch_client_id")
 
 url= "https://api.twitch.tv/helix/users"
-headers= {"Authorization": "Bearer aex1wikx56fhnh837dv7q4b8od6shj",
-             "Client-Id": "gnltd0pal01dzp6uxogo36s83v4ygm"}
+headers= {"Authorization": f"Bearer {token}",
+             "Client-Id": client_id}
 params= {"login": "chili_frosting"}
 
 
