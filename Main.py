@@ -40,33 +40,38 @@ try:
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
             bot.load_extension(f"cogs.{filename[:-3]}")
-    modules = True
+            print(f"loaded command: {filename[:-3]}")
+
+    for filename in os.listdir("./Events"):
+        if filename.endswith(".py"):
+            bot.load_extension(f"Events.{filename[:-3]}")
+            print(f"loaded event: {filename[:-3]}")
 except: 
-    modules = False
+    print("Extensions not loaded")
 
 
 #Initialization, status messages & presence
-@bot.event
-async def on_ready():
-    await bot.change_presence(activity= nextcord.Streaming(name= "from the Twilight zone", url= "https://www.twitch.tv/channel_name"))
-    print(f"Logged in as {bot.user}") 
-    await bot.get_channel(bot_status_channel).send("Bot is ready!\n" f"Logged in as {bot.user}") 
-    if modules == True: 
-        await bot.get_channel(bot_status_channel).send("Modules Loaded!")
-    elif modules == False:
-        await bot.get_channel(bot_status_channel).send("No Modules Loaded!")
+#@bot.event
+#async def on_ready():
+#    await bot.change_presence(activity= nextcord.Streaming(name= "from the Twilight zone", url= "https://www.twitch.tv/channel_name"))
+#    print(f"Logged in as {bot.user}") 
+#    await bot.get_channel(bot_status_channel).send("Bot is ready!\n" f"Logged in as {bot.user}") 
+#    if modules == True: 
+#        await bot.get_channel(bot_status_channel).send("Modules Loaded!")
+#    elif modules == False:
+#        await bot.get_channel(bot_status_channel).send("No Modules Loaded!")
 
 #Member joining server event, sends welcome message in system channel (if set) & notify moderators
-@bot.event
-async def on_member_join(member):
-    await bot.get_channel(mod_channel).send(f"User: {member.name} has joined the server on {date.today()}")
-    if member.guild.system_channel is not None:
-        await member.guild.system_channel.send(f"Welcome to the lab {member.mention}! \n"
-                                               "Please read the rules and verify your humanity to access the server!\n"
-                                               f"Please use ``/verify`` in {verification_channel_url}\n"
-                                               "Glad to see ya!")
-    else: 
-        await bot.get_channel(mod_channel).send("GUILD SYSTEM CHANNEL NOT SET!\n" f"User: {member.name} has joined the server on {date.today()}")
+#@bot.event
+#async def on_member_join(member):
+#    await bot.get_channel(mod_channel).send(f"User: {member.name} has joined the server on {date.today()}")
+#    if member.guild.system_channel is not None:
+#        await member.guild.system_channel.send(f"Welcome to the lab {member.mention}! \n"
+#                                               "Please read the rules and verify your humanity to access the server!\n"
+#                                               f"Please use ``/verify`` in {verification_channel_url}\n"
+#                                               "Glad to see ya!")
+#    else: 
+#        await bot.get_channel(mod_channel).send("GUILD SYSTEM CHANNEL NOT SET!\n" f"User: {member.name} has joined the server on {date.today()}")
 
 #Slash command for verification
 @bot.slash_command(name= "verify", guild_ids= [guild_id], description= "Start Verification")
