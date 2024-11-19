@@ -14,7 +14,7 @@ guild_id= 849857597658103848
 mod_channel= 1294760925617717373
 mod_role_name= os.getenv("ADMIN_ROLE_NAME")
 
-class DelMsgs(commands.cog):
+class DelMsgs(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
@@ -30,7 +30,7 @@ class DelMsgs(commands.cog):
         delmsgs_no= Button(label= "No", style= ButtonStyle.green, emoji= "\N{Cross Mark}", disabled= False)
 
         #function for yes button object 
-        async def delmsgs_yes_callback(interaction):
+        async def delmsgs_yes_callback(self, interaction):
             try:
                 delmsgs_yes.disabled, delmsgs_no.disabled = True, True
                 await interaction.response.edit_message(view= delmsgs_view)

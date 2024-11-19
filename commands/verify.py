@@ -11,8 +11,8 @@ load_dotenv(override= True)
 
 guild_id = 849857597658103848
 verified_role_name= os.getenv("ROLE_NAME")
-verification_channel_id= os.getenv("VERIFY_CHANNEL_ID")
-mod_channel= os.getenv("ADMIN_CHANNEL")
+verification_channel_id= 1294760925617717373
+mod_channel= 1294760925617717373
 
 class Verify(commands.Cog):
     def __init__(self, bot):
