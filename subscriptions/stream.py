@@ -1,5 +1,4 @@
 import requests
-import json
 
 def stream_online(url, token, client_id, session_id):
 
@@ -21,9 +20,13 @@ def stream_online(url, token, client_id, session_id):
         }
     }
 
-    jheaders= json.dumps(headers)
-    jdata= json.dumps(data)
-
     response= requests.post(url= url, headers= headers, json= data)
-    print(response.json())
+    post_response= response.json()
+    status= post_response["data"][0]["status"]
+
+    if status == "enabled":
+        
+        type= post_response["data"][0]["type"]
+        broadcaster= post_response["data"][0]["condition"]["broadcaster_user_id"]
+        print(f"\nSubscription request sucessful!\nSubscription Details:\nType: {type}\nBroadcaster: {broadcaster}")
     return 
