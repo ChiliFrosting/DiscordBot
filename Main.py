@@ -18,7 +18,6 @@ intents.members = True
 bot = commands.Bot(intents = intents)
 
 #loading extensions
-
 count = 0
 for filename in os.listdir("./commands"):
     if filename.endswith(".py"):
