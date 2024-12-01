@@ -3,7 +3,8 @@ from websockets.asyncio.client import connect
 from dotenv import load_dotenv
 import os 
 import json
-from subscriptions.stream import stream_online
+from websocket_message_queue import ws_message_queue
+
 
 load_dotenv(override=True)
 
@@ -14,7 +15,7 @@ websocket_endpoint= os.getenv("twitch_cli_websocket")
 subscription_endpoint= os.getenv("twitch_cli_eventsub")
 
 
-async def session():
+async def websocket_client():
     async with connect(websocket_endpoint) as ws:
         while True:
             
@@ -29,7 +30,8 @@ async def session():
                 print(f"\nConnected to websocket session @{websocket_endpoint}, Status: {session_status}")
                 print(f"session ID: {session_id}")
 
-                stream_online(url=subscription_endpoint, token= token, client_id= client_id, session_id= session_id)
+                subscription= stream_online(url=subscription_endpoint, token= token, client_id= client_id, session_id= session_id)
+                print(subscription)
 
             elif message_type == "session_keepalive":
                 print(f"Session keep alive received, connected to endpoint: {websocket_endpoint}")
@@ -38,4 +40,4 @@ async def session():
                 print(f"Event trigger received from endpoint: {websocket_endpoint}")
 
 
-asyncio.get_event_loop().run_until_complete(session())
+asyncio.run(websocket_client())

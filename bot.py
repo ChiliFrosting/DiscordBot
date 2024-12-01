@@ -3,6 +3,7 @@ import nextcord
 from nextcord.ext import commands
 import os
 from dotenv import load_dotenv
+import asyncio
 
 #load env variables
 load_dotenv(override= True)
@@ -19,19 +20,19 @@ bot = commands.Bot(intents = intents)
 
 #loading extensions
 count = 0
-for filename in os.listdir("./commands"):
+for filename in os.listdir("./Commands"):
     if filename.endswith(".py"):
-        bot.load_extension(f"commands.{filename[:-3]}")
+        bot.load_extension(f"Commands.{filename[:-3]}")
         count+= 1
-print(f"{count} commands loaded")
+print(f"{count} Commands Extensions Loaded")
     
 count= 0
 for filename in os.listdir("./Events"):
     if filename.endswith(".py"):
         bot.load_extension(f"Events.{filename[:-3]}")
         count+= 1
-print(f"{count} event modules loaded")
+print(f"{count} Event Extensions Loaded")
 
 
 #Bot run command
-bot.run(token) 
+asyncio.run(bot.run(token))

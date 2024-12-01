@@ -26,7 +26,7 @@ def stream_online(url, token, client_id, session_id):
 
     if status == "enabled":
         
-        type= post_response["data"][0]["type"]
+        sub_type= post_response["data"][0]["type"]
         broadcaster= post_response["data"][0]["condition"]["broadcaster_user_id"]
-        print(f"\nSubscription request sucessful!\nSubscription Details:\nType: {type}\nBroadcaster: {broadcaster}")
-    return 
+        print(f"\nSubscription request sucessful!\nSubscription Details:\nType: {sub_type}\nBroadcaster: {broadcaster}")
+    return status, sub_type
