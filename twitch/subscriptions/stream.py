@@ -12,7 +12,7 @@ def stream_online(url, token, client_id, session_id):
         "type" : "stream.online",
         "version" : "1",
         "condition" : {
-            "broadcaster_user_id" : "572723176"
+            "broadcaster_user_id" : "95881678"
         },
         "transport" : {
             "method" : "websocket",
@@ -24,9 +24,12 @@ def stream_online(url, token, client_id, session_id):
     post_response= response.json()
     status= post_response["data"][0]["status"]
 
-    if status == "enabled":
+    if "enabled" in status:
         
         sub_type= post_response["data"][0]["type"]
         broadcaster= post_response["data"][0]["condition"]["broadcaster_user_id"]
         print(f"\nSubscription request sucessful!\nSubscription Details:\nType: {sub_type}\nBroadcaster: {broadcaster}")
-    return status, sub_type
+        return status, sub_type, broadcaster
+    else: 
+        status, sub_type, broadcaster= "disabled", None, None
+        return status, sub_type, broadcaster

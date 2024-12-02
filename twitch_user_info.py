@@ -2,6 +2,7 @@ import requests
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv(override= True)
 
 
@@ -11,7 +12,7 @@ client_id= os.getenv("twitch_client_id")
 url= "https://api.twitch.tv/helix/users"
 headers= {"Authorization": f"Bearer {token}",
              "Client-Id": client_id}
-params= {"login": "chili_frosting"}
+params= {"login": "noxious_tgs"}
 
 
 get_user_id= requests.get(url= url, headers=headers, params=params)

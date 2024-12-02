@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 
 
 load_dotenv(override= True)
+
+
 token= os.getenv("twitch_oauth_token")
 
 url = "https://id.twitch.tv/oauth2/validate"
