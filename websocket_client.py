@@ -34,8 +34,10 @@ async def websocket_client():
 
                     status, sub_type, broadcaster= stream_online(url=subscription_endpoint, token= token, client_id= client_id, session_id= session_id)
                     if "stream.online" in sub_type and "enabled" in status: 
-                        #send websocket message to queue
-                        ws_message= "placeholder"
+                        ws_message= {status, sub_type, broadcaster}
+                        await ws_message_queue.put(ws_message)
+                        new_msg= await ws_message_queue.get()
+                        print(new_msg)
 
 
                 case "session_keepalive":
