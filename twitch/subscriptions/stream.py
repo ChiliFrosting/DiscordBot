@@ -1,6 +1,6 @@
 import requests
 
-def stream_online(url, token, client_id, session_id):
+def stream_online(url, token, client_id, session_id, broadcaster_id):
 
     headers= {
         "Authorization" : f"Bearer {token}",
@@ -12,7 +12,7 @@ def stream_online(url, token, client_id, session_id):
         "type" : "stream.online",
         "version" : "1",
         "condition" : {
-            "broadcaster_user_id" : "95881678"
+            "broadcaster_user_id" : broadcaster_id
         },
         "transport" : {
             "method" : "websocket",
