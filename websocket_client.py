@@ -7,6 +7,7 @@ from websocket.websocket_message_queue import ws_message_queue
 from twitch.subscriptions.stream import stream_online
 from datetime import datetime
 
+
 load_dotenv(override=True)
 
 
@@ -82,10 +83,16 @@ async def websocket_client(ws):
 
             case "revocation":
                 print("authorization for subscription revoked")
+                status= ["payload"]["subscription"]["status"]
+                sub_type= ["payload"]["subscription"]["type"]
+                ws_message= {"message" : "revocation", "content" : {"broadcaster_login" : broadcaster_login, "type" : sub_type, "status" : status}}
+                await ws_message_queue.put(ws_message)
+                new_msg= await ws_message_queue.get()
+                print(new_msg)
 
 
             case "close":
-                print("websocket session closed with code(how to check what code?)")
+                print("websocket session closed")
 
 
                 
