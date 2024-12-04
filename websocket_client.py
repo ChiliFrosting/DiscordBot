@@ -52,13 +52,13 @@ async def websocket_client(ws):
 
                 status, sub_type, broadcaster= stream_online(url=subscription_endpoint, token= token, client_id= client_id, session_id= session_id, broadcaster_id= broadcaster_id)
                 if "stream.online" in sub_type and "enabled" in status: 
-                    ws_message= {"message": "subscription_request", "content" : {"status" : {status}, "Type" : {sub_type}, "broadcaster" : {broadcaster}}}
+                    ws_message= {"message": "subscription_request", "content" : {"status" : {status}, "type" : {sub_type}, "broadcaster" : {broadcaster_login}}}
                     await ws_message_queue.put(ws_message)
-                    new_msg= await ws_message_queue.get()
-                    print(new_msg)
+                    #new_msg= await ws_message_queue.get()
+                    #print(new_msg)
 
                 elif "stream.online" in sub_type and "disabled" in status: 
-                    print(f"Subscription request for {broadcaster} failed, status: {status} & type:{sub_type}\nTime: {datetime.now()}")
+                    print(f"Subscription request for {broadcaster_login} failed, status: {status} & type:{sub_type}\nTime: {datetime.now()}")
 
                 else: 
                     (f"Unexpected error: Subscription request failed, Time: {datetime.now()}")
@@ -70,10 +70,10 @@ async def websocket_client(ws):
 
             case "notification":
                 print(f"Event notification received from endpoint: {websocket_endpoint}")
-                ws_message= {"message" : "notification", "content" : {"broadcaster_login" : broadcaster_login}}
+                ws_message= {"message" : "notification", "content" : {"broadcaster_login" : broadcaster_login, "type" : sub_type}}
                 await ws_message_queue.put(ws_message)
-                new_msg= await ws_message_queue.get()
-                print(new_msg)
+                #new_msg= await ws_message_queue.get()
+                #print(new_msg)
 
 
             case "session_reconnect":
@@ -87,8 +87,8 @@ async def websocket_client(ws):
                 sub_type= ["payload"]["subscription"]["type"]
                 ws_message= {"message" : "revocation", "content" : {"broadcaster_login" : broadcaster_login, "type" : sub_type, "status" : status}}
                 await ws_message_queue.put(ws_message)
-                new_msg= await ws_message_queue.get()
-                print(new_msg)
+                #new_msg= await ws_message_queue.get()
+                #print(new_msg)
 
 
             case "close":
