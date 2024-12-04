@@ -3,7 +3,7 @@ from websocket.websocket_client import websocket_client_runtime
 from bot import bot_task, process_queue
 
 async def main():
-    await asyncio.gather(bot_task(), websocket_client_runtime(), process_queue())
+    await asyncio.gather(bot_task(), process_queue(), websocket_client_runtime())
 
 
 asyncio.run(main())

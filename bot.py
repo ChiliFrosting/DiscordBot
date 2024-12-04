@@ -35,21 +35,31 @@ for filename in os.listdir("./Events"):
         count+= 1
 print(f"{count} Event Extensions Loaded")
 
+
+bot_ready_event= asyncio.Event()
+
+
 async def process_queue():
     await bot.wait_until_ready()
 
     while True: 
-        ws_message= ws_message_queue.get()
+        ws_message= await ws_message_queue.get()
 
         if ws_message["message"] == "subscription_request":
+            broadcaster= ws_message["content"]["broadcaster_login"]
+            sub_type= ws_message["content"]["type"]
             channel_id= 1294760925617717373
-            await bot.get_channel(channel_id).send(f"Eventsub subscription request sucessful!\nBroadcaster: {ws_message["content"]["broadcaster"]}\nSubscription Type: {ws_message["content"]["type"]}")
+
+            await bot.get_channel(channel_id).send(f"Eventsub subscription request sucessful!\nBroadcaster: {broadcaster}\nSubscription Type: {sub_type}")
+            ws_message_queue.task_done()
+
 
         elif ws_message["message"] == "notification":
             channel_id= 1294760925617717373
-            await bot.get_channel(channel_id).send(f"{ws_message["content"]["broadcaster"]} is now streaming!")
-
+            await bot.get_channel(channel_id).send(f"{ws_message["content"]["broadcaster_login"]} is now streaming!")
+            ws_message_queue.task_done()
 
 
 #Bot run command
-asyncio.run(bot.run(token))
+async def bot_task():
+    await bot.start(token)
