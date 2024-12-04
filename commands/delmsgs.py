@@ -30,7 +30,7 @@ class DelMsgs(commands.Cog):
         delmsgs_no= Button(label= "No", style= ButtonStyle.green, emoji= "\N{Cross Mark}", disabled= False)
 
         #function for yes button object 
-        async def delmsgs_yes_callback(self, interaction):
+        async def delmsgs_yes_callback(interaction):
             try:
                 delmsgs_yes.disabled, delmsgs_no.disabled = True, True
                 await interaction.response.edit_message(view= delmsgs_view)
