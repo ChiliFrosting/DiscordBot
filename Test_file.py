@@ -1,8 +1,23 @@
-import json 
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
+host= "localhost"
+port= 3000
+url= os.getenv("token_generation_endpoint")
+class http_server(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/hmtl")
+        self.end_headers()
 
-message= {'metadata': {'message_id': '767a350a-0df5-43b6-a816-ce9d2b5c1e61', 'message_type': 'session_welcome', 'message_timestamp': '2024-11-27T00:54:28.531176162Z'}, 'payload': {'session': {'id': 'AgoQ2o7EaOd7TG-b1sEJ1XN5VRIGY2VsbC1j', 'status': 'connected', 'connected_at': '2024-11-27T00:54:28.52632609Z', 'keepalive_timeout_seconds': 10, 'reconnect_url': None, 'recovery_url': None}}}
-jason= json.loads(str(message))
+        self.wfile.write(bytes("<html><body><h1>Hello World!</h1></body></html>", "utf-8"))
+        self.wfile.write(bytes(f"<html><body><h1>{url}</h1></body></html>", "utf-8"))
+        
 
-print(jason)
+server= HTTPServer((host, port), http_server)
+server.serve_forever()
+server.server_close()
