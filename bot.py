@@ -39,7 +39,7 @@ print(f"{count} Event Extensions Loaded")
 bot_ready_event= asyncio.Event()
 
 
-async def process_queue():
+async def process_ws_queue():
     await bot.wait_until_ready()
 
     while True: 
