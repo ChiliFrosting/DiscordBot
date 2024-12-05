@@ -6,7 +6,7 @@ import json
 from websocket.websocket_message_queue import ws_message_queue
 from twitch.subscriptions.stream import stream_online
 from datetime import datetime
-from bot import bot
+from bot.bot import bot
 
 
 load_dotenv(override=True)
