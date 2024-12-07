@@ -1,6 +1,5 @@
 import requests
 import asyncio
-from websocket.websocket_message_queue import ws_token_queue
 import os
 from dotenv import load_dotenv
 

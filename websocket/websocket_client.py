@@ -33,11 +33,13 @@ async def websocket_client_runtime():
                 new_websocket_url= await websocket_client(ws)
                 if new_websocket_url: 
                     print(f"Reconnecting to websocket session . . . .")
-                    websocket_url= websocket_url
+                    websocket_url= new_websocket_url
+                    
         except Exception as e: 
             print(f"Websocket error: {type(e).__name__} - {e}")
             print("Retrying in 5 seconds . . . .")
             await asyncio.sleep(5)
+
 
 
 async def websocket_client(ws):
@@ -71,7 +73,8 @@ async def websocket_client(ws):
 
 
             case "session_keepalive":
-                print(f"Session keep alive received, connected to endpoint: {websocket_endpoint}")
+                keep_alive_time= message_dict["metadata"]["message_timestamp"]
+                print(keep_alive_time)
 
 
             case "notification":
@@ -82,6 +85,8 @@ async def websocket_client(ws):
 
             case "session_reconnect":
                 reconnect_url= message_dict["payload"]["session"]["reconnect_url"]
+                ws_message= {"message" : "reconnect_request", "content" : {"reconnect_url" : reconnect_url}}
+                await ws_message_queue.put(ws_message)
                 return reconnect_url
 
 

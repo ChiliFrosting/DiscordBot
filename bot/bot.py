@@ -53,12 +53,25 @@ async def process_ws_queue():
             await bot.get_channel(channel_id).send(f"Eventsub subscription request sucessful!\nBroadcaster: {broadcaster}\nSubscription Type: {sub_type}")
             ws_message_queue.task_done()
 
-
         elif ws_message["message"] == "notification":
             channel_id= 1294760925617717373
             await bot.get_channel(channel_id).send(f"{ws_message["content"]["broadcaster_login"]} is now streaming!")
             ws_message_queue.task_done()
 
+        elif ws_message["message"] == "reconnect_request":
+            reconnect_url= ws_message["content"]["reconnect_url"]
+            channel_id= 1294760925617717373
+            await bot.get_channel(channel_id).send(f"Eventsub reconnect request received . . . . reconnecting @{reconnect_url}")
+            ws_message_queue.task_done()
+
+        elif ws_message["message"] == "revocation":
+            broadcaster_login= ws_message["content"]["broadcaster_login"]
+            sub_type= ws_message["content"]["type"]
+            status= ws_message["content"]["status"]
+            channel_id= 1294760925617717373
+            await bot.get_channel(channel_id).send(f"Subscription authorization revoked for {broadcaster_login}\nStatus: {status} - Type: {sub_type}")
+            ws_message_queue.task_done()
+            
 
 #Bot run command
 async def bot_task():
