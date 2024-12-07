@@ -31,7 +31,7 @@ async def websocket_client_runtime():
             print(f"Connecting to websocket session @{websocket_url} . . . .")
             async with aiohttp.ClientSession() as session:
                 async with session.ws_connect(websocket_url) as ws:
-                    new_websocket_url= await websocket_client(ws)
+                    new_websocket_url= await websocket_client(ws, session)
                     if new_websocket_url: 
                         print(f"Reconnecting to websocket session . . . .")
                         websocket_url= new_websocket_url
@@ -43,7 +43,7 @@ async def websocket_client_runtime():
 
 
 
-async def websocket_client(ws):
+async def websocket_client(ws, session):
     while True:
             
         message= await ws.receive()
@@ -62,7 +62,7 @@ async def websocket_client(ws):
                         print(f"session ID: {session_id}")
 
 
-                        status, sub_type, broadcaster= stream_online(url=subscription_endpoint, token= token, client_id= client_id, session_id= session_id, broadcaster_id= broadcaster_id)
+                        status, sub_type, broadcaster= await stream_online(session= session, url=subscription_endpoint, token= token, client_id= client_id, session_id= session_id, broadcaster_id= broadcaster_id)
                         if "stream.online" in sub_type and "enabled" in status: 
                             ws_message= {"message": "subscription_request", "content" : {"status" : {status}, "type" : {sub_type}, "broadcaster_login" : {broadcaster_login}}}
                             await ws_message_queue.put(ws_message)
