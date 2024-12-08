@@ -44,23 +44,21 @@ async def process_ws_queue():
 
     while True: 
         ws_message= await ws_message_queue.get()
+        channel_id= 1294760925617717373
 
         if ws_message["message"] == "subscription_request":
             broadcaster= ws_message["content"]["broadcaster_login"]
             sub_type= ws_message["content"]["type"]
-            channel_id= 1294760925617717373
-
+            
             await bot.get_channel(channel_id).send(f"Eventsub subscription request sucessful!\nBroadcaster: {broadcaster}\nSubscription Type: {sub_type}")
             ws_message_queue.task_done()
 
         elif ws_message["message"] == "notification":
-            channel_id= 1294760925617717373
             await bot.get_channel(channel_id).send(f"{ws_message["content"]["broadcaster_login"]} is now streaming!")
             ws_message_queue.task_done()
 
         elif ws_message["message"] == "reconnect_request":
             reconnect_url= ws_message["content"]["reconnect_url"]
-            channel_id= 1294760925617717373
             await bot.get_channel(channel_id).send(f"Eventsub reconnect request received . . . . reconnecting @{reconnect_url}")
             ws_message_queue.task_done()
 
@@ -68,8 +66,11 @@ async def process_ws_queue():
             broadcaster_login= ws_message["content"]["broadcaster_login"]
             sub_type= ws_message["content"]["type"]
             status= ws_message["content"]["status"]
-            channel_id= 1294760925617717373
             await bot.get_channel(channel_id).send(f"Subscription authorization revoked for {broadcaster_login}\nStatus: {status} - Type: {sub_type}")
+            ws_message_queue.task_done()
+
+        elif ws_message["message"] == "token_expired":
+            await bot.get_channel(channel_id).send(f"WARNING: Twitch OAuth access token is expired!\nCannot receive notifications until renewed!")
             ws_message_queue.task_done()
             
 
