@@ -1,5 +1,3 @@
-import aiohttp
-
 async def stream_online(session, url, token, client_id, session_id, broadcaster_id):
 
     headers= {

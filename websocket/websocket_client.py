@@ -20,7 +20,7 @@ broadcaster_id= os.getenv("broadcaster_id")
 broadcaster_login= os.getenv("broadcaster_login")
 
 
-async def websocket_client_runtime():
+async def websocket_client_runtime(session):
     await bot.wait_until_ready()
     await asyncio.sleep(5)
 
@@ -29,12 +29,11 @@ async def websocket_client_runtime():
     while True: 
         try: 
             print(f"Connecting to websocket session @{websocket_url} . . . .")
-            async with aiohttp.ClientSession() as session:
-                async with session.ws_connect(websocket_url) as ws:
-                    new_websocket_url= await websocket_client(ws, session)
-                    if new_websocket_url: 
-                        print(f"Reconnecting to websocket session . . . .")
-                        websocket_url= new_websocket_url
+            async with session.ws_connect(websocket_url) as ws:
+                new_websocket_url= await websocket_client(ws, session)
+                if new_websocket_url: 
+                    print(f"Reconnecting to websocket session . . . .")
+                    websocket_url= new_websocket_url
                     
         except Exception as e: 
             print(f"Websocket error: {type(e).__name__} - {e}")
