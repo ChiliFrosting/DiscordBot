@@ -105,10 +105,6 @@ async def websocket_client(ws, session):
                         await ws_message_queue.put(ws_message)
 
 
-                    case "close":
-                        print("websocket session closed")
-
-
             case aiohttp.WSMsgType.CLOSE:
                 print(f"server closed the connection with status code: {message.data}")
                 await asyncio.sleep(5)
