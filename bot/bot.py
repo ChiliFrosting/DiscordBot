@@ -1,9 +1,7 @@
 #libraries & needed dependencies 
-import nextcord
+import nextcord, os, asyncio
 from nextcord.ext import commands
-import os
 from dotenv import load_dotenv
-import asyncio
 from websocket.websocket_message_queue import ws_message_queue
 
 

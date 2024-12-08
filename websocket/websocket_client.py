@@ -1,8 +1,5 @@
-import asyncio
-import aiohttp
+import asyncio, aiohttp, json, os
 from dotenv import load_dotenv
-import os 
-import json
 from websocket.websocket_message_queue import ws_message_queue
 from twitch.subscriptions.stream import stream_online
 from datetime import datetime, timezone
