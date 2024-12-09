@@ -1,8 +1,12 @@
-import asyncio, aiohttp, json, os
+import asyncio
+import aiohttp
+import json
+import os
+from datetime import datetime, timezone
+
 from dotenv import load_dotenv
 from websocket.websocket_message_queue import ws_message_queue
 from twitch.subscriptions.stream import stream_online
-from datetime import datetime, timezone
 from bot.bot import bot
 
 
@@ -81,7 +85,7 @@ async def websocket_client(ws, session):
 
 
                     case "notification":
-                        print(f"Event notification received from endpoint: {websocket_endpoint}")
+                        print(f"Stream.Online event notification received from endpoint: {websocket_endpoint}")
                         ws_message= {"message" : "notification", "content" : {"broadcaster_login" : broadcaster_login, "type" : sub_type}}
                         await ws_message_queue.put(ws_message)
 

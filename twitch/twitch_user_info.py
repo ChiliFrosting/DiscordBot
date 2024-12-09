@@ -1,9 +1,14 @@
-import asyncio, aiohttp, os
+import asyncio
+import aiohttp
+import os
+
 from dotenv import load_dotenv
 
 
+load_dotenv(override= True)
+
+
 async def user_info():
-    load_dotenv(override= True)
 
     token= os.getenv("twitch_oauth_token")
     client_id= os.getenv("twitch_client_id")
