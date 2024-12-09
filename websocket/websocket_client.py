@@ -96,8 +96,8 @@ async def websocket_client(ws, session):
 
                     case "revocation":
                         print("authorization for subscription revoked")
-                        status= ["payload"]["subscription"]["status"]
-                        sub_type= ["payload"]["subscription"]["type"]
+                        status= message_dict["payload"]["subscription"]["status"]
+                        sub_type= message_dict["payload"]["subscription"]["type"]
                         ws_message= {"message" : "revocation", "content" : {"broadcaster_login" : broadcaster_login, "type" : sub_type, "status" : status}}
                         await ws_message_queue.put(ws_message)
 
