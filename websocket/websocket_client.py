@@ -107,16 +107,17 @@ async def websocket_client(ws, session):
 
 
             case aiohttp.WSMsgType.CLOSED:
-                print(f"server closed the connection unexpectedly: {aiohttp.WSCloseCode.ABNORMAL_CLOSURE}")
+                print(f"Server closed the connection unexpectedly: Websocket Connection Closed Abnormally - {aiohttp.WSCloseCode.ABNORMAL_CLOSURE}")
                 await asyncio.sleep(5)
                 return
             
 
             case aiohttp.WSMsgType.CLOSE:
-                print(f"server closed the connection with status code: {aiohttp.WSCloseCode.OK}")
+                print(f"Server closed the connection: Websocket Connection Close OK, close frame received - {aiohttp.WSCloseCode.OK}")
                 await asyncio.sleep(5)
                 return
             
             
             case _:
                 print("Server closed the connection with no status code")
+                return

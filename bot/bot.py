@@ -29,7 +29,7 @@ bot = commands.Bot(intents = intents)
 status_channel= int(os.getenv("STATUS_CHANNEL"))
 announcements_channel= int(os.getenv("ANNOUNCEMENT_CHANNEL"))
 log_channel= int(os.getenv("LOG_CHANNEL"))
-
+token_url= os.getenv("token_generation_endpoint")
 
 #loading extensions
 count = 0
@@ -88,7 +88,7 @@ async def process_ws_queue():
 
 
         elif ws_message["message"] == "token_expired":
-            await bot.get_channel(log_channel).send(f"WARNING: Twitch OAuth access token is expired!\nCannot receive notifications until renewed!")
+            await bot.get_channel(log_channel).send(f"WARNING: Twitch OAuth access token is expired!\nCannot receive notifications until renewed!\nGo to this URL and complete authorization flow to renew access token: {token_url}")
             ws_message_queue.task_done()
             
 
