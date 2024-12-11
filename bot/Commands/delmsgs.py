@@ -1,17 +1,20 @@
-import nextcord
 import os
-from nextcord.ext import commands
-from nextcord import File, ButtonStyle
-from nextcord.ui import Button, View
 from datetime import date
 from dotenv import load_dotenv
+
+import nextcord
+from nextcord.ext import commands
+from nextcord import ButtonStyle
+from nextcord.ui import Button, View
+
+
 
 
 
 load_dotenv(override=True)
 
-guild_id= 849857597658103848
-mod_channel= 1294760925617717373
+guild_id= int(os.getenv("SERVER_ID"))
+mod_channel= int(os.getenv("ADMIN_CHANNEL"))
 mod_role_name= os.getenv("ADMIN_ROLE_NAME")
 
 class DelMsgs(commands.Cog):

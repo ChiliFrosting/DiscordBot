@@ -10,7 +10,7 @@ async def main():
 
         await asyncio.gather(bot_task(), 
                              process_ws_queue(), 
-                             websocket_client_runtime(session), 
+                             websocket_client_runtime(session),
                              token_validation_task(session))
 
 asyncio.run(main())

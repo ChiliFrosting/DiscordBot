@@ -7,7 +7,7 @@ import os
 load_dotenv(override= True)
 
 
-mod_channel = 1294760925617717373
+mod_channel = int(os.getenv("ADMIN_CHANNEL"))
 verification_channel_url= os.getenv("VERIFY_CHANNEL_URL")
 
 class member_Events(commands.Cog):

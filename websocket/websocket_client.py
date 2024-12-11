@@ -23,7 +23,7 @@ broadcaster_login= os.getenv("broadcaster_login")
 
 async def websocket_client_runtime(session):
     await bot.wait_until_ready()
-    await asyncio.sleep(5)
+    await asyncio.sleep(9)
 
     
     websocket_url= websocket_endpoint

@@ -1,7 +1,15 @@
+import os
+from dotenv import load_dotenv
+
 import nextcord
 from nextcord.ext import commands
 
-guild_id = 849857597658103848
+
+
+load_dotenv(override=True)
+
+
+guild_id = int(os.getenv("SERVER_ID"))
 
 class Ping(commands.Cog):
     def __init__(self, bot):

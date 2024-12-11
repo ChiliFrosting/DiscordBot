@@ -11,6 +11,7 @@ load_dotenv(override= True)
 
 async def token_validation_task(session):
     await bot.wait_until_ready()
+    await asyncio.sleep(3)
 
     token= os.getenv("twitch_oauth_token")
     url = "https://id.twitch.tv/oauth2/validate"

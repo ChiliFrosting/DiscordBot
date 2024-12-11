@@ -1,9 +1,12 @@
+import os 
+from dotenv import load_dotenv
+
 from nextcord.ext import commands
 import nextcord
 
 
 
-bot_status_channel = 1294760925617717373
+bot_status_channel = int(os.getenv("STATUS_CHANNEL"))
 
 class bot_Events(commands.Cog):
     def __init__(self, bot):
