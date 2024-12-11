@@ -45,33 +45,35 @@ async def process_ws_queue():
 
     while True: 
         ws_message= await ws_message_queue.get()
-        channel_id= 1294760925617717373
+        announcements_channel= int(os.getenv("ANNOUNCEMENTS_CHANNEL"))
+        status_channel= int(os.getenv("STATUS_CHANNEL"))
+        log_channel= int(os.getenv("LOG_CHANNEL"))
 
         if ws_message["message"] == "subscription_request":
             broadcaster= ws_message["content"]["broadcaster_login"]
             sub_type= ws_message["content"]["type"]
             
-            await bot.get_channel(channel_id).send(f"Eventsub subscription request sucessful!\nBroadcaster: {broadcaster}\nSubscription Type: {sub_type}")
+            await bot.get_channel(status_channel).send(f"Eventsub subscription request sucessful!\nBroadcaster: {broadcaster}\nSubscription Type: {sub_type}")
             ws_message_queue.task_done()
 
         elif ws_message["message"] == "notification":
-            await bot.get_channel(channel_id).send(f"{ws_message["content"]["broadcaster_login"]} is now streaming!")
+            await bot.get_channel(announcements_channel).send(f"{ws_message["content"]["broadcaster_login"]} is now streaming!")
             ws_message_queue.task_done()
 
         elif ws_message["message"] == "reconnect_request":
             reconnect_url= ws_message["content"]["reconnect_url"]
-            await bot.get_channel(channel_id).send(f"Eventsub reconnect request received . . . . reconnecting @{reconnect_url}")
+            await bot.get_channel(log_channel).send(f"Eventsub reconnect request received . . . . reconnecting @{reconnect_url}")
             ws_message_queue.task_done()
 
         elif ws_message["message"] == "revocation":
             broadcaster_login= ws_message["content"]["broadcaster_login"]
             sub_type= ws_message["content"]["type"]
             status= ws_message["content"]["status"]
-            await bot.get_channel(channel_id).send(f"Subscription authorization revoked for {broadcaster_login}\nStatus: {status} - Type: {sub_type}")
+            await bot.get_channel(log_channel).send(f"Subscription authorization revoked for {broadcaster_login}\nStatus: {status} - Type: {sub_type}")
             ws_message_queue.task_done()
 
         elif ws_message["message"] == "token_expired":
-            await bot.get_channel(channel_id).send(f"WARNING: Twitch OAuth access token is expired!\nCannot receive notifications until renewed!")
+            await bot.get_channel(status_channel).send(f"WARNING: Twitch OAuth access token is expired!\nCannot receive notifications until renewed!")
             ws_message_queue.task_done()
             
 
