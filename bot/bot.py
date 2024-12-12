@@ -57,13 +57,14 @@ async def process_ws_queue():
 
     while True: 
         ws_message= await ws_message_queue.get()
-
+        announcements_channel= int(os.getenv("ANNOUNCEMENTS_CHANNEL"))
+        status_channel= int(os.getenv("STATUS_CHANNEL"))
+        log_channel= int(os.getenv("LOG_CHANNEL"))
 
         if ws_message["message"] == "subscription_request":
             broadcaster= ws_message["content"]["broadcaster_login"]
             sub_type= ws_message["content"]["type"]
             
-
             await bot.get_channel(status_channel).send(f"Eventsub subscription request sucessful!\nBroadcaster: {broadcaster}\nSubscription Type: {sub_type}")
             ws_message_queue.task_done()
 
@@ -88,7 +89,7 @@ async def process_ws_queue():
 
 
         elif ws_message["message"] == "token_expired":
-            await bot.get_channel(log_channel).send(f"WARNING: Twitch OAuth access token is expired!\nCannot receive notifications until renewed!\nGo to this URL and complete authorization flow to renew access token: {token_url}")
+            await bot.get_channel(status_channel).send(f"WARNING: Twitch OAuth access token is expired!\nCannot receive notifications until renewed!")
             ws_message_queue.task_done()
             
 
