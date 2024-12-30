@@ -57,7 +57,7 @@ async def process_ws_queue():
 
     while True: 
         ws_message= await ws_message_queue.get()
-        announcements_channel= int(os.getenv("ANNOUNCEMENTS_CHANNEL"))
+        announcements_channel= int(os.getenv("ANNOUNCEMENT_CHANNEL"))
         status_channel= int(os.getenv("STATUS_CHANNEL"))
         log_channel= int(os.getenv("LOG_CHANNEL"))
 
