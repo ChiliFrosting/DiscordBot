@@ -69,3 +69,5 @@ async def shutdown_server():
     await asyncio.sleep(1)  # Allow some time for the client to receive the response
     print("Shutting down the server...")
     raise web.GracefulExit  # Trigger the graceful exit of the server
+
+asyncio.run(start_app())
