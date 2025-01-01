@@ -3,6 +3,7 @@ import os
 
 import dotenv
 from aiohttp import web
+from bot.bot import bot
 
 
 
@@ -50,6 +51,8 @@ async def init_app():
 
 
 async def start_app():
+    await bot.wait_until_ready()
+    await asyncio.sleep(12)
     app = await init_app()
     Baserunner = web.AppRunner(app = app)
     await Baserunner.setup()
@@ -69,5 +72,3 @@ async def shutdown_server():
     await asyncio.sleep(1)  # Allow some time for the client to receive the response
     print("Shutting down the server...")
     raise web.GracefulExit  # Trigger the graceful exit of the server
-
-asyncio.run(start_app())
