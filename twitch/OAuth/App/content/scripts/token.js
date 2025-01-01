@@ -33,7 +33,7 @@ window.onload = function() {
     const tokenResponse = document.getElementById("token-response");
 
     if (token) {
-        tokenResponse.textContent = "Token sent!"
+        tokenResponse.textContent = "Token Renewed!"
         sendToken(token);
     }
     else {
