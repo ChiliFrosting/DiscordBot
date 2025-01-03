@@ -60,6 +60,7 @@ async def process_ws_queue():
         announcements_channel= int(os.getenv("ANNOUNCEMENT_CHANNEL"))
         status_channel= int(os.getenv("STATUS_CHANNEL"))
         log_channel= int(os.getenv("LOG_CHANNEL"))
+        channel_url = os.getenv("channel_url")
 
         if ws_message["message"] == "subscription_request":
             broadcaster= ws_message["content"]["broadcaster_login"]
@@ -71,6 +72,17 @@ async def process_ws_queue():
 
         elif ws_message["message"] == "notification":
             await bot.get_channel(announcements_channel).send(f"{ws_message["content"]["broadcaster_login"]} is now streaming!")
+
+            embed = nextcord.Embed(
+                color= nextcord.Color.blurple(),
+                title = "[streamer name here] is now live on Twitch!",
+                type = "rich",
+                url = channel_url,
+                description = f"[stream title here]({channel_url})"
+            )
+
+
+
             ws_message_queue.task_done()
 
 
