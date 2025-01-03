@@ -36,17 +36,24 @@ async def stream_online(session, url, token, client_id, session_id, broadcaster_
 
 
 
-async def stream_info(session, url, token, client_id, user_id, type):
+async def stream_info(session, url, token, client_id, user_id):
     headers = {
         "Authorization" : f"Bearer {token}",
-        "Client-Id" : f"{client_id}",
+        "Client-Id" : f"{client_id}"
+    }
+    params = {
+        "user_id" : user_id
     }
 
-    data = {
-        "user_id" : f"{user_id}",
-        "type" : f"{type}"
-    }
-
-    async with session.get(url = url, headers = headers, data = data) as response:
+    async with session.get(url = url, headers = headers, params = params) as response:
         response_json = await response.json()
-        print(f"Stream data for user: {user_id}\n\nresponse:\n{response_json}" )
+
+        game_name = response_json["data"][0]["game_name"]
+        type = response_json["data"][0]["type"]
+        title = response_json["data"][0]["title"]
+        start_time = response_json["data"][0]["started_at"]
+
+        if not type == "live":
+            return None
+        
+        return game_name, type, title, start_time
