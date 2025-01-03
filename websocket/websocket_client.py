@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 
 from dotenv import load_dotenv
 from websocket.websocket_message_queue import ws_message_queue
-from twitch.subscriptions.stream import stream_online
+from twitch.subscriptions.stream import stream_online, stream_info
 from bot.bot import bot
 
 
@@ -19,6 +19,7 @@ websocket_endpoint= os.getenv("twitch_cli_websocket")
 subscription_endpoint= os.getenv("twitch_cli_eventsub")
 broadcaster_id= os.getenv("broadcaster_id")
 broadcaster_login= os.getenv("broadcaster_login")
+stream_info_endpoint = os.getenv("stream_info_endpoint")
 
 
 async def websocket_client_runtime(session):
@@ -77,15 +78,17 @@ async def websocket_client(ws, session):
 
 
                     case "session_keepalive":
-                        time= message_dict["metadata"]["message_timestamp"]
+                        """time= message_dict["metadata"]["message_timestamp"]
                         time_t= datetime.fromisoformat(time.replace("Z", "+00:00"))
                         time_now= datetime.now(timezone.utc)
                         time_diff= time_now - time_t
-                        print(time_diff)
+                        print(time_diff)"""
+                        pass
 
 
                     case "notification":
                         print(f"Stream.Online event notification received from endpoint: {websocket_endpoint}")
+                        await stream_info(session = session, url = stream_info_endpoint, token = token, client_id = client_id, user_id = broadcaster_id, type = "all")
                         ws_message= {"message" : "notification", "content" : {"broadcaster_login" : broadcaster_login, "type" : sub_type}}
                         await ws_message_queue.put(ws_message)
 
