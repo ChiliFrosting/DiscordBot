@@ -1,9 +1,9 @@
 import asyncio
-import aiohttp
 import json
 import os
 from datetime import datetime, timezone
 
+import aiohttp
 from dotenv import load_dotenv
 from websocket.websocket_message_queue import ws_message_queue
 from twitch.subscriptions.stream import stream_online, stream_info
@@ -46,7 +46,7 @@ async def websocket_client_runtime(session):
 
 async def websocket_client(ws, session):
     while True:
-            
+        
         message= await ws.receive()
         match message.type:
 
@@ -88,8 +88,28 @@ async def websocket_client(ws, session):
 
                     case "notification":
                         print(f"Stream.Online event notification received from endpoint: {websocket_endpoint}")
-                        await stream_info(session = session, url = stream_info_endpoint, token = token, client_id = client_id, user_id = broadcaster_id, type = "all")
-                        ws_message= {"message" : "notification", "content" : {"broadcaster_login" : broadcaster_login, "type" : sub_type}}
+                        
+                        stream_game, stream_type, stream_title, stream_start_time = await stream_info(
+                            session = session,
+                            url = stream_info_endpoint,
+                            token = token,
+                            client_id = client_id,
+                            user_id = broadcaster_id,
+                            type = "all"
+                            )
+                        
+                        ws_message= {
+                            "message" : "notification",
+                            "content" : {
+                                "broadcaster_login" : broadcaster_login,
+                                "type" : sub_type,
+                                "stream_game" : stream_game,
+                                "stream_type" : stream_type,
+                                "stream_title" : stream_title,
+                                "stream_start_time" : stream_start_time
+                                }
+                            }
+                            
                         await ws_message_queue.put(ws_message)
 
 
