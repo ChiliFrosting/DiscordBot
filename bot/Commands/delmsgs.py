@@ -1,3 +1,4 @@
+
 import os
 from datetime import date
 from dotenv import load_dotenv
@@ -8,19 +9,18 @@ from nextcord import ButtonStyle
 from nextcord.ui import Button, View
 
 
-
-
-
 load_dotenv(override=True)
+
 
 guild_id= int(os.getenv("SERVER_ID"))
 mod_channel= int(os.getenv("ADMIN_CHANNEL"))
 mod_role_name= os.getenv("ADMIN_ROLE_NAME")
 
+
 class DelMsgs(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
+
     @nextcord.slash_command(name= "delmsgs", guild_ids= [guild_id], description= "Delete all messages in the channel")
     async def delmsgs(self, interaction: nextcord.Interaction):
         
@@ -35,21 +35,25 @@ class DelMsgs(commands.Cog):
         #function for yes button object 
         async def delmsgs_yes_callback(interaction):
             try:
+
                 delmsgs_yes.disabled, delmsgs_no.disabled = True, True
                 await interaction.response.edit_message(view= delmsgs_view)
                 await channel.purge()
                 await interaction.send("purge successful", ephemeral = True)
                 await self.bot.get_channel(mod_channel).send(f"Channel: {channel} purged on {date.today()}")
             except:
+
                 await interaction.send("Oops something went wrong, please contact administrator!")
         
         #function for no button object
         async def delmsgs_no_callback(interaction):
             try:
+
                 delmsgs_yes.disabled, delmsgs_no.disabled = True, True
                 await interaction.response.edit_message(view= delmsgs_view)
                 await interaction.send("Purge canceled", ephemeral = True)
             except:
+
                 await interaction.send("Oops something went wrong, please contact administrator!")
 
         #button object function callbacks
@@ -65,13 +69,17 @@ class DelMsgs(commands.Cog):
 
         #checks if user has moderator role, otherwise it tattles
         try:
+
             if role in interaction.user.roles:
                 await interaction.send(f"**HALT** :raised_back_of_hand: are you sure you want to delete **ALL** messages in this channel?", view= delmsgs_view, ephemeral= True)
-            else: 
+            
+            else:
                 await interaction.send("You do not have permission to use this command!", ephemeral= True)
                 await self.bot.get_channel(mod_channel).send(f"Unauthorized use of command by user: {interaction.user.global_name}")
+
         except:
             await interaction.send("Oops something went wrong, please contact administrator!")
+
 
 def setup(bot):
     bot.add_cog(DelMsgs(bot))

@@ -1,3 +1,4 @@
+
 async def stream_online(session, url, token, client_id, session_id, broadcaster_id):
 
     headers= {
@@ -31,9 +32,6 @@ async def stream_online(session, url, token, client_id, session_id, broadcaster_
         else: 
             status, sub_type, broadcaster= "disabled", None, None
             return status, sub_type, broadcaster
-        
-
-
 
 
 async def stream_info(session, url, token, client_id, user_id):

@@ -27,7 +27,9 @@ async def token_validation_task(session):
 
             else: 
                 print("Access Token is invalid, new OAuth user access token required")
-                ws_message= {"message" : "token_expired"}
+                ws_message= {
+                    "message" : "token_expired"
+                    }
                 #asyncio event set/unset here
                 await ws_message_queue.put(ws_message)
                 await asyncio.sleep(3600)

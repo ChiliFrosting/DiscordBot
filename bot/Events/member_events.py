@@ -1,7 +1,9 @@
+
+import os
+
 from nextcord.ext import commands
 from datetime import date
 from dotenv import load_dotenv
-import os
 
 
 load_dotenv(override= True)
@@ -9,6 +11,7 @@ load_dotenv(override= True)
 
 mod_channel = int(os.getenv("ADMIN_CHANNEL"))
 verification_channel_url= os.getenv("VERIFY_CHANNEL_URL")
+
 
 class member_Events(commands.Cog):
     def __init__(self, bot):
@@ -24,7 +27,6 @@ class member_Events(commands.Cog):
                                                "Glad to see ya!")
         else:
             await self.bot.get_channel(mod_channel).send("GUILD SYSTEM CHANNEL NOT SET!\n" f"User: {member.name} has joined the server on {date.today()}")
-
 
            
 def setup(bot):

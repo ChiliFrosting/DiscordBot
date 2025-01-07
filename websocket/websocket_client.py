@@ -1,3 +1,4 @@
+
 import asyncio
 import json
 import os
@@ -25,10 +26,10 @@ stream_info_endpoint = os.getenv("stream_info_endpoint")
 async def websocket_client_runtime(session):
     await bot.wait_until_ready()
     await asyncio.sleep(9)
-
     
     websocket_url= websocket_endpoint
     while True: 
+
         try: 
             print(f"Connecting to websocket session @{websocket_url} . . . .")
             async with session.ws_connect(websocket_url) as ws:
@@ -41,7 +42,6 @@ async def websocket_client_runtime(session):
             print(f"Websocket error: {type(e).__name__} - {e}")
             print("Retrying in 5 seconds . . . .")
             await asyncio.sleep(5)
-
 
 
 async def websocket_client(ws, session):
@@ -62,20 +62,30 @@ async def websocket_client(ws, session):
                         print(f"\nConnected to websocket session @{websocket_endpoint}, Status: {session_status}")
                         print(f"session ID: {session_id}")
 
-
-                        status, sub_type, broadcaster= await stream_online(session= session, url=subscription_endpoint, token= token, client_id= client_id, session_id= session_id, broadcaster_id= broadcaster_id)
+                        status, sub_type, broadcaster= await stream_online(
+                            session = session,
+                            url = subscription_endpoint,
+                            token = token,
+                            client_id = client_id,
+                            session_id = session_id,
+                            broadcaster_id = broadcaster_id
+                            )
+                        
                         if "stream.online" in sub_type and "enabled" in status: 
-                            ws_message= {"message": "subscription_request", "content" : {"status" : {status}, "type" : {sub_type}, "broadcaster_login" : {broadcaster_login}}}
+                            ws_message= {
+                                "message": "subscription_request",
+                                "content" : {
+                                    "status" : {status}, "type" : {sub_type}, "broadcaster_login" : {broadcaster_login}
+                                    }
+                                }
+                            
                             await ws_message_queue.put(ws_message)
                             
-
                         elif "stream.online" in sub_type and "disabled" in status: 
                             print(f"Subscription request for {broadcaster_login} failed, status: {status} & type:{sub_type}\nTime: {datetime.now()}")
 
-
                         else: 
                             (f"Unexpected error: Subscription request failed, Time: {datetime.now()}")
-
 
                     case "session_keepalive":
                         """time= message_dict["metadata"]["message_timestamp"]
@@ -85,17 +95,15 @@ async def websocket_client(ws, session):
                         print(time_diff)"""
                         pass
 
-
                     case "notification":
                         print(f"Stream.Online event notification received from endpoint: {websocket_endpoint}")
-                        
+
                         stream_game, stream_type, stream_title, stream_start_time = await stream_info(
                             session = session,
                             url = stream_info_endpoint,
                             token = token,
                             client_id = client_id,
                             user_id = broadcaster_id,
-                            type = "all"
                             )
                         
                         ws_message= {
@@ -112,14 +120,18 @@ async def websocket_client(ws, session):
                             
                         await ws_message_queue.put(ws_message)
 
-
                     case "session_reconnect":
                         reconnect_url= message_dict["payload"]["session"]["reconnect_url"]
                         print(reconnect_url)
-                        ws_message= {"message" : "reconnect_request", "content" : {"reconnect_url" : reconnect_url}}
+                        ws_message= {
+                            "message" : "reconnect_request",
+                            "content" : {
+                                "reconnect_url" : reconnect_url
+                                }
+                            }
+                        
                         await ws_message_queue.put(ws_message)
                         return reconnect_url
-
 
                     case "revocation":
                         print("authorization for subscription revoked")
@@ -128,18 +140,15 @@ async def websocket_client(ws, session):
                         ws_message= {"message" : "revocation", "content" : {"broadcaster_login" : broadcaster_login, "type" : sub_type, "status" : status}}
                         await ws_message_queue.put(ws_message)
 
-
             case aiohttp.WSMsgType.CLOSED:
                 print(f"Server closed the connection unexpectedly: Websocket Connection Closed Abnormally - {aiohttp.WSCloseCode.ABNORMAL_CLOSURE}")
                 await asyncio.sleep(5)
                 return
             
-
             case aiohttp.WSMsgType.CLOSE:
                 print(f"Server closed the connection: Websocket Connection Close OK, close frame received - {aiohttp.WSCloseCode.OK}")
                 await asyncio.sleep(5)
                 return
-            
             
             case _:
                 print("Server closed the connection with no status code")

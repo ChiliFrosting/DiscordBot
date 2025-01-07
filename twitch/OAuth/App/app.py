@@ -6,7 +6,6 @@ from aiohttp import web
 from bot.bot import bot
 
 
-
 # Load the .env file for storing the token
 env_file = dotenv.find_dotenv()
 dotenv.load_dotenv(env_file)
