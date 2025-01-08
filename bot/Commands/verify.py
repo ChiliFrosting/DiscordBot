@@ -1,5 +1,6 @@
 
-from time import sleep
+
+import asyncio
 import os
 
 import nextcord 
@@ -33,14 +34,17 @@ class Verify(commands.Cog):
         #XXXX_callback where "XXXX" is the name of the button object 
         async def verify_callback(interaction): 
             try:
+
                 verify.disabled = True
                 await interaction.response.edit_message(view= verify_view)
                 await interaction.send("just a sec")
-                sleep(3)
+                await asyncio.sleep(3)
                 await interaction.send("you're now verified!")
-                sleep(3)
+                await asyncio.sleep(3)
                 await interaction.user.add_roles(role)
+
             except:
+
                 await interaction.send("Oops something went wrong, please contact administrator!")
 
         #sets the callback attribute of the button object as the callback function above
@@ -54,16 +58,25 @@ class Verify(commands.Cog):
 
         #interaction response message when initiating the verification command, checks if channel is correct 
         try:
+
             if interaction.channel_id == verification_channel_id:
+
                 if role not in interaction.user.roles:
+
                     await interaction.send("By completing verification you are agreeing to the rules!", view= verify_view)
+
                 else:
+
                     await interaction.send("You're already verified", ephemeral= True)
             else:
+
                 await interaction.send("Command cannot be used here!", ephemeral= True)
+
         except:
+
             await interaction.send("Oops something went wrong, please contact administrator!")
             self.bot.get_channel(mod_channel).send(f"something went wrong when verifying user: {interaction.user.global_name} aka {interaction.user.display_name} check terminal logging for details")
+            
             
 def setup(bot):
     bot.add_cog(Verify(bot))
