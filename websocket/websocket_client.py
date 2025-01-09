@@ -36,7 +36,7 @@ async def websocket_client_runtime(session):
                 new_websocket_url= await websocket_client(ws, session)
                 if new_websocket_url: 
                     print(f"Reconnecting to websocket session . . . .")
-                    websocket_url= new_websocket_url
+                    #websocket_url= new_websocket_url
                     
         except Exception as e: 
             print(f"Websocket error: {type(e).__name__} - {e}")
@@ -88,12 +88,8 @@ async def websocket_client(ws, session):
                             (f"Unexpected error: Subscription request failed, Time: {datetime.now()}")
 
                     case "session_keepalive":
-                        """time= message_dict["metadata"]["message_timestamp"]
-                        time_t= datetime.fromisoformat(time.replace("Z", "+00:00"))
-                        time_now= datetime.now(timezone.utc)
-                        time_diff= time_now - time_t
-                        print(time_diff)"""
-                        pass
+                        print("Session keepalive frame received")
+                        
 
                     case "notification":
                         print(f"Stream.Online event notification received from endpoint: {websocket_endpoint}")
