@@ -1,5 +1,10 @@
-nextcord==2.6.0
+# Required 3rd party packages 
+# nextcord package may raise an error when running your code due to the deprecated & removed audioop module
+# if you're running python 3.12 or later.
+# if you want python 3.11 or later and don't need any voice chat features from nextcord,
+# you may comment out import instances such as in player.py in the package.
+# worked well for me but I wouldn't trust me 
+ 
+nextcord==3.0.1
 python-dotenv==1.0.1
-setuptools==75.3.0
-requests==2.32.3
-websockets==14.1
+aiohttp==3.11.11
