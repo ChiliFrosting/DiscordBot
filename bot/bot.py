@@ -68,11 +68,11 @@ async def process_ws_queue():
 
             embed = nextcord.Embed(
                 color= nextcord.Color.blurple(),
-                title = f"{broadcaster_login} is now live on Twitch!",
+                title = stream_title,
                 type = "rich",
                 url = channel_url,
-                description = f"{stream_title}({channel_url})"
             )
+            embed.set_author(name = f"{broadcaster_login.title()} is now live on Twitch!", url = channel_url)
             embed.set_image(url = stream_thumbnail)
             embed.add_field(name = "Game", value = stream_game)
             embed.set_footer(text = bot_name, icon_url = bot_icon)
