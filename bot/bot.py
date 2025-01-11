@@ -18,10 +18,12 @@ intents = nextcord.Intents.all()
 intents.members = True
 bot = commands.Bot(intents = intents)
 
-status_channel= int(os.getenv("STATUS_CHANNEL"))
-announcements_channel= int(os.getenv("ANNOUNCEMENT_CHANNEL"))
-log_channel= int(os.getenv("LOG_CHANNEL"))
-token_url= os.getenv("token_generation_endpoint")
+bot_name = os.getenv("BOT_NAME")
+bot_icon = os.getenv("BOT_ICON")
+status_channel = int(os.getenv("STATUS_CHANNEL"))
+announcements_channel = int(os.getenv("ANNOUNCEMENT_CHANNEL"))
+log_channel = int(os.getenv("LOG_CHANNEL"))
+channel_url = os.getenv("channel_url")
 
 
 count = 0
@@ -48,10 +50,6 @@ async def process_ws_queue():
 
     while True: 
         ws_message= await ws_message_queue.get()
-        announcements_channel= int(os.getenv("ANNOUNCEMENT_CHANNEL"))
-        status_channel= int(os.getenv("STATUS_CHANNEL"))
-        log_channel= int(os.getenv("LOG_CHANNEL"))
-        channel_url = os.getenv("channel_url")
 
         if ws_message["message"] == "subscription_request":
             broadcaster_login= ws_message["content"]["broadcaster_login"]
@@ -64,7 +62,9 @@ async def process_ws_queue():
             await bot.get_channel(announcements_channel).send(f"{ws_message["content"]["broadcaster_login"]} is now streaming!")
 
             broadcaster_login = ws_message["content"]["broadcaster_login"]
+            stream_game = ws_message["content"]["stream_game"]
             stream_title = ws_message["content"]["stream_title"]
+            stream_thumbnail = ws_message["content"]["stream_thumbnail"]
 
             embed = nextcord.Embed(
                 color= nextcord.Color.blurple(),
@@ -73,6 +73,12 @@ async def process_ws_queue():
                 url = channel_url,
                 description = f"{stream_title}({channel_url})"
             )
+            embed.set_image(url = stream_thumbnail)
+            embed.add_field(name = "Game", value = stream_game)
+            embed.set_footer(text = bot_name, icon_url = bot_icon)
+
+            await bot.get_channel(announcements_channel).send(f"@everyone {broadcaster_login} is now live on Twitch!", embed = embed)
+
             ws_message_queue.task_done()
 
 
