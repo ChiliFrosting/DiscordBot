@@ -46,12 +46,13 @@ async def stream_info(session, url, token, client_id, user_id):
     async with session.get(url = url, headers = headers, params = params) as response:
         response_json = await response.json()
 
-        game_name = response_json["data"][0]["game_name"]
-        type = response_json["data"][0]["type"]
-        title = response_json["data"][0]["title"]
-        start_time = response_json["data"][0]["started_at"]
+        stream_game_name = response_json["data"][0]["game_name"]
+        stream_type = response_json["data"][0]["type"]
+        stream_title = response_json["data"][0]["title"]
+        stream_start_time = response_json["data"][0]["started_at"]
+        stream_thumbnail = response_json["data"][0]["thumbnail_url"]
 
-        if not type == "live":
+        if not stream_type == "live":
             return None
         
-        return game_name, type, title, start_time
+        return stream_game_name, stream_type, stream_title, stream_start_time, stream_thumbnail
