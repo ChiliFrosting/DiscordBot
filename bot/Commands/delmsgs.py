@@ -18,6 +18,18 @@ mod_role_name= os.getenv("ADMIN_ROLE_NAME")
 
 
 class DelMsgs(commands.Cog):
+    """Class/Cog for channel purge command.
+    This command clears all messages in a channel (to an extent, may have to use it a couple times cause its buggy)
+    Can be used by admins only. Command can be invoked using slash_commands(/).
+
+    Command uses buttons from the nextcord.ButtonStyle module for an interactive response.
+
+    Args:
+        name (str): Command name 
+        guild_ids (list): list of guild/server IDs where the command can be used
+        description (str): Command description
+    """
+    
     def __init__(self, bot):
         self.bot = bot
 
@@ -28,11 +40,34 @@ class DelMsgs(commands.Cog):
         role = nextcord.utils.get(interaction.guild.roles, name= mod_role_name)
         channel = self.bot.get_channel(interaction.channel_id)
 
-        #Yes & no button objects
+        """
+        Yes & no button objects
+
+        Args: 
+            label (str, Optional): Text over button
+            style (nextcord.ButtonStyle): sets button color, refer to nextcord docs for possible colors
+            emoji (Emoji unicode name, Optional): Emoji displayed
+            disabled(bool): whether the button can be clicked or not(greyed out)
+
+        """
+        
         delmsgs_yes= Button(label= "Yes", style= ButtonStyle.danger, emoji= "\N{Wastebasket}", disabled= False)
         delmsgs_no= Button(label= "No", style= ButtonStyle.green, emoji= "\N{Cross Mark}", disabled= False)
 
-        #function for yes button object 
+        """
+        The following two functions edit the Yes & No buttons after interacting with it or a timeout.
+        The functions take "interaction" instance as their only argument.
+
+        Args:
+            view (callable obj): The button view instance for the interaction
+            ephemeral (bool): whether the message is viewed for the user alone or everyone
+            mod_channel (int): The set mod/admin channel
+            channel (int): The channel where the interaction occured
+
+        Raises: 
+            Generic error if something goes wrong ig lol
+
+        """ 
         async def delmsgs_yes_callback(interaction):
             try:
 
@@ -45,7 +80,7 @@ class DelMsgs(commands.Cog):
 
                 await interaction.send("Oops something went wrong, please contact administrator!")
         
-        #function for no button object
+        # Function for no button object
         async def delmsgs_no_callback(interaction):
             try:
 
@@ -56,18 +91,18 @@ class DelMsgs(commands.Cog):
 
                 await interaction.send("Oops something went wrong, please contact administrator!")
 
-        #button object function callbacks
+        # Don't remember why I did this >_>
         delmsgs_yes.callback = delmsgs_yes_callback
         delmsgs_no.callback = delmsgs_no_callback
 
-        #button object view for delmsgs command
+        # Button view instance for the interaction
         delmsgs_view = View(timeout = 30)
 
-        #add button objects to the delmsgs command view
+        # Adds the button objects to the interaction view
         delmsgs_view.add_item(delmsgs_yes)
         delmsgs_view.add_item(delmsgs_no)
 
-        #checks if user has moderator role, otherwise it tattles
+        # Checks if user has moderator role, otherwise it tattles
         try:
 
             if role in interaction.user.roles:
@@ -81,5 +116,6 @@ class DelMsgs(commands.Cog):
             await interaction.send("Oops something went wrong, please contact administrator!")
 
 
+# Registers the command Class/Cog with the bot
 def setup(bot):
     bot.add_cog(DelMsgs(bot))

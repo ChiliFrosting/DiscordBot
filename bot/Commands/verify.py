@@ -1,5 +1,4 @@
 
-
 import asyncio
 import os
 
@@ -12,26 +11,47 @@ from dotenv import load_dotenv
 
 load_dotenv(override= True)
 
+
 guild_id = int(os.getenv("SERVER_ID"))
 verified_role_name= os.getenv("ROLE_NAME")
 verification_channel_id= int(os.getenv("VERIFY_CHANNEL_ID"))
 mod_channel= int(os.getenv("ADMIN_CHANNEL"))
 
 class Verify(commands.Cog):
+    """ This class/cog is for the verification command """
+
     def __init__(self, bot):
         self.bot = bot
 
     @nextcord.slash_command(name= "verify", guild_ids= [guild_id], description= "Start Verification")
     async def verify(self, interaction: nextcord.Interaction):
-        
-        #verified role
+        """
+        This function handles member verification.
+
+        Args: 
+
+            name (str): Command name
+            guild_ids (list): list of guild/server IDs where the command should be used
+            description (str): Command description 
+            role (str): Verified role name
+            verify (callable obj): Button object setup for verification interaction
+            label (str): Button text
+            style (ButtonStyle): Sets button color
+            emoji (Unicode/Codepoints): Adds corresponding emoji to the button
+            disabled (bool): whether the button is active (interactable) or disabled (greyed out)
+
+        Raises: 
+            Generic error cause procrastinating on this
+
+        """
+        # Verified role to be given
         role = nextcord.utils.get(interaction.guild.roles, name= verified_role_name)
 
-        #Button objects, Refer to documentation for attributes
+        # Button objects, Refer to documentation for attributes
         verify = Button(label= "Verify", style= ButtonStyle.success, emoji= "\N{White Heavy Check Mark}", disabled= False)
 
-        #Button object callback functions, this handles what happens when the corresponding button is pressed, message is then edited to disable buttons
-        #XXXX_callback where "XXXX" is the name of the button object 
+        # Button object callback functions, this handles what happens when the corresponding button is pressed, message is then edited to disable buttons
+        # XXXX_callback where "XXXX" is the name of the button object 
         async def verify_callback(interaction): 
             try:
 
@@ -47,16 +67,16 @@ class Verify(commands.Cog):
 
                 await interaction.send("Oops something went wrong, please contact administrator!")
 
-        #sets the callback attribute of the button object as the callback function above
+        # Sets the callback attribute of the button object as the callback function above
         verify.callback = verify_callback
 
-        #UI views [currently per message view with a timeout of 30 seconds]
+        # Button views [currently per message view with a timeout of 30 seconds]
         verify_view= View(timeout= 30)
 
-        #Items [i.e. buttons] added to the view [per message currently] 
+        # Items [i.e. buttons] added to the view [per message]
         verify_view.add_item(verify)
 
-        #interaction response message when initiating the verification command, checks if channel is correct 
+        # Interaction response message when initiating the verification command, checks if channel is correct 
         try:
 
             if interaction.channel_id == verification_channel_id:
