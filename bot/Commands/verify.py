@@ -12,10 +12,10 @@ from dotenv import load_dotenv
 
 load_dotenv(override= True)
 
-guild_id = 849857597658103848
+guild_id = int(os.getenv("SERVER_ID"))
 verified_role_name= os.getenv("ROLE_NAME")
-verification_channel_id= 1294760925617717373
-mod_channel= 1294760925617717373
+verification_channel_id= int(os.getenv("VERIFY_CHANNEL_ID"))
+mod_channel= int(os.getenv("ADMIN_CHANNEL"))
 
 class Verify(commands.Cog):
     def __init__(self, bot):
