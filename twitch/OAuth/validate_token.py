@@ -10,6 +10,15 @@ load_dotenv(override= True)
 
 
 async def token_validation_task(session):
+    """
+    According to Twitch API requirements, all apps must validate their OAuth access token 
+    hourly, this function does just that. This function runs concurrently with the others
+    in the main entry point and shares the event loop.
+
+    invalid token? doesn't do a thing... for now at least
+    """
+    
+    # TODO: flag to stop websocket client from connecting until access token is renewed
     await bot.wait_until_ready()
     await asyncio.sleep(3)
 

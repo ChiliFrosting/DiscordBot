@@ -1,3 +1,4 @@
+
 import asyncio
 import os
 
@@ -6,20 +7,34 @@ from aiohttp import web
 from bot.bot import bot
 
 
-# Load the .env file for storing the token
+# Load the .env file containing the OAuth token
 env_file = dotenv.find_dotenv()
 dotenv.load_dotenv(env_file)
 
 
 async def index_handler(request):
+    """ Homepage """
+
     return web.FileResponse("./twitch/OAuth/App/content/index.html")
 
 
 async def redirect_handler(request):
+    """ Redirect to this page after obtaining access token """
+
     return web.FileResponse("./twitch/OAuth/App/content/redirect.html")
 
 
 async def token_handler(request):
+    """
+    This function handles the POST request from the JavaScript code on the redirect.html file 
+    containing the OAuth access token. If the request is OK, the OAuth token in the .env file 
+    is overwritten by the new OAuth token.
+
+    Raises: 
+
+        Generic error because I don't like testing error handling
+    """
+
     try: 
         data = await request.json()
         token = data.get("token")
@@ -40,6 +55,14 @@ async def token_handler(request):
     
 
 async def init_app():
+    """ Initialize app instance, add routes, methods & serve HTML files
+    in the content directory.
+
+    Returns: 
+    
+        App instance 
+    """
+
     app = web.Application()
     app.router.add_static("/content/", "./twitch/OAuth/App/content")
     app.router.add_get("/", index_handler)
@@ -50,6 +73,17 @@ async def init_app():
 
 
 async def start_app():
+    """
+    Assigned function to run the webserver in the event loop.
+    server is run after the Bot is ready. 
+
+    Server is hosted @http://localhost:3000, port 3000 is the required port 
+    according to the Twitch API docs 
+
+    a Baserunner instance is used to maintain a single event loop for all the tasks
+
+    Server can be shutdown via keyboard interrupt
+    """
     await bot.wait_until_ready()
     await asyncio.sleep(12)
     app = await init_app()
@@ -66,8 +100,9 @@ async def start_app():
         await Baserunner.cleanup()
 
 
-async def shutdown_server():
-    """Shuts down the server after a short delay to allow the response to be sent."""
+# WIP: graceful shutdown of webserver with resource cleanup 
+"""async def shutdown_server():
+    #Shuts down the server after a short delay to allow the response to be sent.
     await asyncio.sleep(1)  # Allow some time for the client to receive the response
     print("Shutting down the server...")
-    raise web.GracefulExit  # Trigger the graceful exit of the server
+    raise web.GracefulExit  # Trigger the graceful exit of the server"""

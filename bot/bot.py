@@ -41,10 +41,42 @@ for filename in os.listdir("./bot/Events"):
 print(f"{count} Event Extensions Loaded")
 
 
+# I don't remember why I put this here
 bot_ready_event= asyncio.Event()
 
 
 async def process_ws_queue():
+    """
+    This function processes the websocket message queue & implements the logic based on the "message" key value.
+
+    Websocket messages are nested dictionaries built in the websocket_client module, message dict is built only for the types in the conditional statement
+    and error are handled by that module.
+    
+    This is the structure for websocket messages: 
+    
+        ws_message = {
+            "message" : "message type here",
+            "content" : {
+                "content1" : "content1 value"
+                ...
+                }
+            }
+
+        Possible "message" types: 
+            - subscription_request
+            - notification
+            - reconnect_request
+            - revocation
+            - token_expired
+
+        Each type corresponds to a case in the conditional statement.
+
+        The "content" key contains the required key-value pairs by the logic of each condition & stored in a dict.
+
+        for example: a websocket message with type "notification" will have a "content" dict containing required data for the stream notification message posted 
+        in the server, so broadcaster login, stream title, game, thumbnail etc 
+    """
+
     await bot.wait_until_ready()
     await asyncio.sleep(6)
 
@@ -72,7 +104,7 @@ async def process_ws_queue():
                 type = "rich",
                 url = channel_url,
             )
-            embed.set_author(name = f"{broadcaster_login.title()} is now live on Twitch!", url = channel_url)
+            embed.set_author(name = f"{broadcaster_login} is now live on Twitch!", url = channel_url)
             embed.set_image(url = stream_thumbnail)
             embed.add_field(name = "Game", value = stream_game)
             embed.set_footer(text = bot_name, icon_url = bot_icon)
@@ -101,5 +133,6 @@ async def process_ws_queue():
             ws_message_queue.task_done()
 
 
+# Assigned task for the bot instance to be run in the event loop
 async def bot_task():
     await bot.start(token)

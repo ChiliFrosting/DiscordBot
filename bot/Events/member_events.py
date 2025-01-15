@@ -14,11 +14,23 @@ verification_channel_url= os.getenv("VERIFY_CHANNEL_URL")
 
 
 class member_Events(commands.Cog):
+    """ Class/Cog containing member related event listeners """
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
+        """
+        This event listener waits for a new member to join the guild/server, sends a welcome message 
+        in the system channel if set & directs members to the verification flow
+
+        This listener requires the member intents [Intents.members] to function properly
+
+        Args: 
+
+            member (callable): The member that triggered the event (member joining the server/guild in this case)
+        """
+
         await self.bot.get_channel(mod_channel).send(f"User: {member.name} has joined the server on {date.today()}")
         if member.guild.system_channel is not None:
             await member.guild.system_channel.send(f"Welcome to the lab {member.mention}! \n"
@@ -28,6 +40,7 @@ class member_Events(commands.Cog):
         else:
             await self.bot.get_channel(mod_channel).send("GUILD SYSTEM CHANNEL NOT SET!\n" f"User: {member.name} has joined the server on {date.today()}")
 
-           
+
+# Register the class/cog with the bot, supports loading/unloading although not currently implemented           
 def setup(bot):
     bot.add_cog(member_Events(bot))

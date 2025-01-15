@@ -1,5 +1,26 @@
 
+""" This module contains all the functions related to Twitch API stream subscriptions """
+
 async def stream_online(session, url, token, client_id, session_id, broadcaster_id):
+    """
+    This function sends a stream.online subscription request through the eventsub API
+    for the broadcaster ID provided to it.
+
+    The request is send using HTTP POST via the Aiohtto client session "session"
+
+    Args:
+        session (client.session): Aiohttp client.session(), this is passed from the main entry point
+        url (str): Eventsub API subscriptions endpoint
+        token (str): OAuth access token
+        client_id (str): Twitch App client ID (provided by Twitch in the dev dashboard)
+        session_id (str): Websocket session ID provided by the welcome message when the websocket client connects 
+        broadcaster_id (str): Broadcaster ID of the channel to be subscribed to
+
+    Returns:
+        status (str): Subscription request status
+        sub_type (str): Subscription type | None if status is "disabled"
+        broadcaster (str): Broadcaster ID | None if status is "disabled"
+    """
 
     headers= {
         "Authorization" : f"Bearer {token}",
@@ -35,6 +56,25 @@ async def stream_online(session, url, token, client_id, session_id, broadcaster_
 
 
 async def stream_info(session, url, token, client_id, user_id):
+    """
+    This function obtains stream info for the Broadcaster ID provided.
+
+    Args:
+        session (Aiohttp Client.session()): Aiohttp client session, passed from the main entry 
+        url (str): Twitch Helix API streams endpoint
+        token (str): OAuth access token
+        client_id (str): Twitch App client ID (provided by Twitch in the dev dashboard)
+        broadcaster_id (_type_): Broadcaster ID for whom stream information is requested
+
+    Returns:
+        None: if GET request stream_type variable is not "live" (stream is not live)
+        stream_game_name (dict | str): streamed game name
+        stream_type (dict | str): stream is live: type is live (idk what else it could be, don't want to look it up now)
+        stream_title (dict | str): stream title (duh)
+        stream_start_time (dict | str): stream start time UTC
+        stream_thumbnail (dict | str): stream thumbnail URL, provided by Twitch
+    """
+
     headers = {
         "Authorization" : f"Bearer {token}",
         "Client-Id" : f"{client_id}"

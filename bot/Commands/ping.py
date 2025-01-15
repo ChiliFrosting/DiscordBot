@@ -30,6 +30,7 @@ class Ping(commands.Cog):
     async def ping(self, interaction: nextcord.Interaction):
         await interaction.send("Pong!")
 
-# Registers the ping class/cog with the bot
+
+# Registers the ping class/cog with the bot, supports loading/unloading although not currently implemented
 def setup(bot):
     bot.add_cog(Ping(bot))

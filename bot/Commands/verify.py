@@ -97,6 +97,7 @@ class Verify(commands.Cog):
             await interaction.send("Oops something went wrong, please contact administrator!")
             self.bot.get_channel(mod_channel).send(f"something went wrong when verifying user: {interaction.user.global_name} aka {interaction.user.display_name} check terminal logging for details")
             
-            
+
+# Registers the class/cog with the bot, supports loading/unloading although not implemented currently            
 def setup(bot):
     bot.add_cog(Verify(bot))

@@ -1,4 +1,9 @@
 
+"""
+Independant module to obtain Broadcaster ID from Broadcaster login
+Broadcaster login is the broadcaster's user name all lowercase
+"""
+
 import asyncio
 import aiohttp
 import os
