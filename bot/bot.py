@@ -24,6 +24,7 @@ status_channel = int(os.getenv("STATUS_CHANNEL"))
 announcements_channel = int(os.getenv("ANNOUNCEMENT_CHANNEL"))
 log_channel = int(os.getenv("LOG_CHANNEL"))
 channel_url = os.getenv("channel_url")
+channel_icon = os.getenv("channel_icon")
 
 
 count = 0
@@ -91,9 +92,8 @@ async def process_ws_queue():
             ws_message_queue.task_done()
 
         elif ws_message["message"] == "notification":
-            await bot.get_channel(announcements_channel).send(f"{ws_message["content"]["broadcaster_login"]} is now streaming!")
 
-            broadcaster_login = ws_message["content"]["broadcaster_login"]
+            broadcaster_user_name = ws_message["content"]["broadcaster_user_name"]
             stream_game = ws_message["content"]["stream_game"]
             stream_title = ws_message["content"]["stream_title"]
             stream_thumbnail = ws_message["content"]["stream_thumbnail"]
@@ -104,12 +104,12 @@ async def process_ws_queue():
                 type = "rich",
                 url = channel_url,
             )
-            embed.set_author(name = f"{broadcaster_login} is now live on Twitch!", url = channel_url)
+            embed.set_author(name = f"{broadcaster_user_name} is now live on Twitch!", url = channel_url, icon_url = channel_icon)
             embed.set_image(url = stream_thumbnail)
             embed.add_field(name = "Game", value = stream_game)
             embed.set_footer(text = bot_name, icon_url = bot_icon)
 
-            await bot.get_channel(announcements_channel).send(f"@everyone {broadcaster_login} is now live on Twitch!", embed = embed)
+            await bot.get_channel(announcements_channel).send(f"@everyone {broadcaster_user_name} is now live on Twitch!", embed = embed)
 
             ws_message_queue.task_done()
 
