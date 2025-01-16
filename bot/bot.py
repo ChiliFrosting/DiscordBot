@@ -94,6 +94,7 @@ async def process_ws_queue():
         elif ws_message["message"] == "notification":
 
             broadcaster_user_name = ws_message["content"]["broadcaster_user_name"]
+            channel_image_url = ws_message["content"]["channel_image_url"]
             stream_game = ws_message["content"]["stream_game"]
             stream_title = ws_message["content"]["stream_title"]
             stream_thumbnail = ws_message["content"]["stream_thumbnail"]
@@ -104,7 +105,7 @@ async def process_ws_queue():
                 type = "rich",
                 url = channel_url,
             )
-            embed.set_author(name = f"{broadcaster_user_name} is now live on Twitch!", url = channel_url, icon_url = channel_icon)
+            embed.set_author(name = f"{broadcaster_user_name} is now live on Twitch!", url = channel_url, icon_url = channel_image_url)
             embed.set_image(url = stream_thumbnail)
             embed.add_field(name = "Game", value = stream_game)
             embed.set_footer(text = bot_name, icon_url = bot_icon)

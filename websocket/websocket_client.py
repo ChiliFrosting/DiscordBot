@@ -8,6 +8,7 @@ import aiohttp
 from dotenv import load_dotenv
 from websocket.websocket_message_queue import ws_message_queue
 from twitch.subscriptions.stream import stream_online, stream_info
+from twitch.subscriptions.users import user_info
 from bot.bot import bot
 
 
@@ -102,10 +103,13 @@ async def websocket_client(ws, session):
                             braodcaster_id = broadcaster_id,
                             )
                         
+                        channel_image_url = user_info(session = session, token = token, client_id = client_id, broadcaster_login = broadcaster_login)
+
                         ws_message= {
                             "message" : "notification",
                             "content" : {
                                 "broadcaster_user_name" : broadcaster_user_name,
+                                "channel_image_url" : channel_image_url,
                                 "type" : sub_type,
                                 "stream_game" : stream_game_name,
                                 "stream_type" : stream_type,
@@ -128,7 +132,6 @@ async def websocket_client(ws, session):
                             }
                         
                         await ws_message_queue.put(ws_message)
-                        return reconnect_url
 
                     case "revocation":
                         print("authorization for subscription revoked")
