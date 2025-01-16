@@ -1,5 +1,5 @@
 
-""" This module contains all the functions related to Twitch API stream subscriptions """
+""" This module contains all the functions related to Twitch API stream subscriptions & info """
 
 async def stream_online(session, url, token, client_id, session_id, broadcaster_id):
     """
@@ -86,17 +86,22 @@ async def stream_info(session, url, token, client_id, braodcaster_id):
     async with session.get(url = url, headers = headers, params = params) as response:
         response_json = await response.json()
 
-        broadcaster_user_name = response_json["data"][0]["user_name"]
-        stream_game_name = response_json["data"][0]["game_name"]
-        stream_type = response_json["data"][0]["type"]
-        stream_title = response_json["data"][0]["title"]
-        stream_start_time = response_json["data"][0]["started_at"]
-        stream_thumbnail = response_json["data"][0]["thumbnail_url"].replace("-{width}x{height}", "")
-        #Stream thumbnail url: https://static-cdn.jtvnw.net/previews-ttv/live_user_channelName-{width}x{height}.jpg
-        #Above URL takes you to a page that doesn't exist, tried a few resolution combinations but still receive a 404 error
-        #for now I'm just removing the "-{width}x{height}" substring and the URL works as intended
+        if response_json["data"]:
 
-        if not stream_type == "live":
-            return None
+            broadcaster_user_name = response_json["data"][0]["user_name"]
+            stream_game_name = response_json["data"][0]["game_name"]
+            stream_type = response_json["data"][0]["type"]
+            stream_title = response_json["data"][0]["title"]
+            stream_start_time = response_json["data"][0]["started_at"]
+            stream_thumbnail = response_json["data"][0]["thumbnail_url"].replace("-{width}x{height}", "")
+            #Stream thumbnail url: https://static-cdn.jtvnw.net/previews-ttv/live_user_channelName-{width}x{height}.jpg
+            #Above URL takes you to a page that doesn't exist, tried a few resolution combinations but still receive a 404 error
+            #for now I'm just removing the "-{width}x{height}" substring and the URL works as intended
+
+            if not stream_type == "live":
+                return None
+            
+            return broadcaster_user_name, stream_game_name, stream_type, stream_title, stream_start_time, stream_thumbnail
         
-        return broadcaster_user_name, stream_game_name, stream_type, stream_title, stream_start_time, stream_thumbnail
+        else:
+            return None
