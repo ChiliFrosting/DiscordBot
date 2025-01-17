@@ -5,7 +5,7 @@ import asyncio
 from dotenv import load_dotenv
 import nextcord
 from nextcord.ext import commands
-from websocket.websocket_message_queue import ws_message_queue
+from twitch.websocket.websocket_message_queue import ws_message_queue
 
 
 load_dotenv(override= True)

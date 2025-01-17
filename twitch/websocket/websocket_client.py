@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 
 import aiohttp
 from dotenv import load_dotenv
-from websocket.websocket_message_queue import ws_message_queue
+from twitch.websocket.websocket_message_queue import ws_message_queue
 from twitch.subscriptions.stream import stream_online, stream_info
 from twitch.subscriptions.users import user_info
 from bot.bot import bot

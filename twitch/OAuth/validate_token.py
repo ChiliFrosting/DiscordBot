@@ -2,7 +2,7 @@ import asyncio
 import os
 
 from dotenv import load_dotenv
-from websocket.websocket_message_queue import ws_message_queue
+from twitch.websocket.websocket_message_queue import ws_message_queue
 from bot.bot import bot
 
 
