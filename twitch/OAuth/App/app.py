@@ -84,8 +84,10 @@ async def start_app():
 
     Server can be shutdown via keyboard interrupt
     """
+    
     await bot.wait_until_ready()
     await asyncio.sleep(12)
+
     app = await init_app()
     Baserunner = web.AppRunner(app = app)
     await Baserunner.setup()
