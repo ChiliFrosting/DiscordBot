@@ -5,7 +5,7 @@ async def user_info(session, token, client_id, broadcaster_login):
 
     headers = {
         "Authorization" : f"Bearer {token}",
-        "Client_Id" : client_id
+        "Client-Id" : client_id
     }
     params = {
         "login" : broadcaster_login
@@ -16,7 +16,7 @@ async def user_info(session, token, client_id, broadcaster_login):
         response_json = await response.json()
 
         if response_json["data"]:
-            channel_image_url = response_json["data"][0]["profiles_image_url"]
+            channel_image_url = response_json["data"][0]["profile_image_url"]
             
             return channel_image_url
         

@@ -103,7 +103,7 @@ async def websocket_client(ws, session):
                             braodcaster_id = broadcaster_id,
                             )
                         
-                        channel_image_url = user_info(session = session, token = token, client_id = client_id, broadcaster_login = broadcaster_login)
+                        channel_image_url = await user_info(session = session, token = token, client_id = client_id, broadcaster_login = broadcaster_login)
 
                         ws_message= {
                             "message" : "notification",
