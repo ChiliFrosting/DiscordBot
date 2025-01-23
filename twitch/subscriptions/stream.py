@@ -88,7 +88,7 @@ async def stream_info(session, url, token, client_id, braodcaster_id):
 
         if response_json["data"]:
 
-            broadcaster_user_name = response_json["data"][0]["user_name"]
+            broadcaster_name = response_json["data"][0]["user_name"]
             stream_game_name = response_json["data"][0]["game_name"]
             stream_type = response_json["data"][0]["type"]
             stream_title = response_json["data"][0]["title"]
@@ -101,7 +101,7 @@ async def stream_info(session, url, token, client_id, braodcaster_id):
             if not stream_type == "live":
                 return None
             
-            return broadcaster_user_name, stream_game_name, stream_type, stream_title, stream_start_time, stream_thumbnail
+            return broadcaster_name, stream_game_name, stream_type, stream_title, stream_start_time, stream_thumbnail
         
         else:
             return None

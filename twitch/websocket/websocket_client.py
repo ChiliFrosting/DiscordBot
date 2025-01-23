@@ -95,7 +95,7 @@ async def websocket_client(ws, session):
                     case "notification":
                         print(f"Stream.Online event notification received from endpoint: {websocket_endpoint}")
 
-                        broadcaster_user_name, stream_game_name, stream_type, stream_title, stream_start_time, stream_thumbnail = await stream_info(
+                        broadcaster_name, stream_game_name, stream_type, stream_title, stream_start_time, stream_thumbnail = await stream_info(
                             session = session,
                             url = stream_info_endpoint,
                             token = token,
@@ -108,7 +108,7 @@ async def websocket_client(ws, session):
                         ws_message= {
                             "message" : "notification",
                             "content" : {
-                                "broadcaster_user_name" : broadcaster_user_name,
+                                "broadcaster_name" : broadcaster_name,
                                 "channel_image_url" : channel_image_url,
                                 "type" : sub_type,
                                 "stream_game" : stream_game_name,
