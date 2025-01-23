@@ -3,6 +3,7 @@ import os
 import asyncio
 from datetime import datetime, timezone
 
+from bot.bot_responses import twitch_notification
 from dotenv import load_dotenv
 import nextcord
 from nextcord.ext import commands
@@ -100,19 +101,15 @@ async def process_ws_queue():
             stream_title = ws_message["content"]["stream_title"]
             stream_thumbnail = ws_message["content"]["stream_thumbnail"]
 
-            embed = nextcord.Embed(
-                color= nextcord.Color.blurple(),
-                title = stream_title,
-                type = "rich",
-                url = channel_url,
+            twitch_embed = twitch_notification(
+                broadcaster_name = broadcaster_name,
+                channel_image_url = channel_image_url,
+                stream_game = stream_game, 
+                stream_title = stream_title,
+                stream_thumbnail = stream_thumbnail
             )
-            embed.set_author(name = f"{broadcaster_name} is now live on Twitch!", url = channel_url, icon_url = channel_image_url)
-            embed.set_image(url = stream_thumbnail)
-            embed.add_field(name = "Game", value = stream_game)
-            embed.set_footer(text = bot_name, icon_url = bot_icon)
-            embed.timestamp = datetime.now(timezone.utc)
 
-            await bot.get_channel(announcements_channel).send(f"@everyone {broadcaster_name} is now live on Twitch!", embed = embed)
+            await bot.get_channel(announcements_channel).send(f"@everyone {broadcaster_name} is now live on Twitch!", embed = twitch_embed)
 
             ws_message_queue.task_done()
 
