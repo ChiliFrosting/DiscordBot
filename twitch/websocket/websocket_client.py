@@ -10,6 +10,7 @@ from twitch.websocket.websocket_message_queue import ws_message_queue
 from twitch.subscriptions.stream import stream_online, stream_info
 from twitch.subscriptions.users import user_info
 from bot.bot import bot
+from bot.async_events import OAuth_valid_event
 
 
 load_dotenv(override=True)
@@ -26,12 +27,12 @@ stream_info_endpoint = os.getenv("stream_info_endpoint")
 
 async def websocket_client_runtime(session):
     await bot.wait_until_ready()
-    await asyncio.sleep(9)
     
     websocket_url= websocket_endpoint
     while True: 
 
         try: 
+            await OAuth_valid_event.wait()
             print(f"Connecting to websocket session @{websocket_url} . . . .")
             async with session.ws_connect(websocket_url) as ws:
                 new_websocket_url= await websocket_client(ws, session)

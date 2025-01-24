@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from twitch.websocket.websocket_message_queue import ws_message_queue
 from bot.bot import bot
+from bot.async_events import OAuth_valid_event, process_queue_event
 
 
 load_dotenv(override= True)
@@ -20,7 +21,7 @@ async def token_validation_task(session):
     
     # TODO: flag to stop websocket client from connecting until access token is renewed
     await bot.wait_until_ready()
-    await asyncio.sleep(3)
+    await process_queue_event.wait()
 
     token= os.getenv("twitch_oauth_token")
     url = "https://id.twitch.tv/oauth2/validate"
@@ -32,6 +33,10 @@ async def token_validation_task(session):
     
             if response_status == 200:
                 print("Access Token is valid")
+
+                if not OAuth_valid_event.is_set():
+                    OAuth_valid_event.set()
+
                 await asyncio.sleep(3600)
 
             else: 
@@ -39,6 +44,7 @@ async def token_validation_task(session):
                 ws_message= {
                     "message" : "token_expired"
                     }
-                #asyncio event set/unset here
+                
+                OAuth_valid_event.clear()
                 await ws_message_queue.put(ws_message)
                 await asyncio.sleep(3600)

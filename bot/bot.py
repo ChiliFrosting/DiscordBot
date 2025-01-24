@@ -1,9 +1,9 @@
 
 import os
 import asyncio
-from datetime import datetime, timezone
 
 from bot.bot_responses import twitch_notification
+from bot.async_events import process_queue_event
 from dotenv import load_dotenv
 import nextcord
 from nextcord.ext import commands
@@ -44,10 +44,6 @@ for filename in os.listdir("./bot/Events"):
 print(f"{count} Event Extensions Loaded")
 
 
-# I don't remember why I put this here
-bot_ready_event= asyncio.Event()
-
-
 async def process_ws_queue():
     """
     This function processes the websocket message queue & implements the logic based on the "message" key value.
@@ -81,7 +77,7 @@ async def process_ws_queue():
     """
 
     await bot.wait_until_ready()
-    await asyncio.sleep(6)
+    process_queue_event.set()
 
     while True: 
         ws_message= await ws_message_queue.get()

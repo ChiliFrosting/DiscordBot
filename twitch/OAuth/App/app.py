@@ -86,7 +86,7 @@ async def start_app():
     """
     
     await bot.wait_until_ready()
-    await asyncio.sleep(12)
+    await asyncio.sleep(5)
 
     app = await init_app()
     Baserunner = web.AppRunner(app = app)
