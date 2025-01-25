@@ -7,8 +7,16 @@ from datetime import datetime, timezone
 import nextcord
 
 
-async def twitch_notification(broadcaster_name, channel_image_url, stream_game, stream_title, 
-                              stream_thumbnail, channel_url, bot_name, bot_icon):
+async def twitch_notification(
+                broadcaster_name,
+                channel_image_url,
+                stream_game,
+                stream_title,
+                stream_thumbnail,
+                channel_url,
+                bot_name,
+                bot_icon
+):
     """
     Constructor for bot embeds representing Twitch websocket notification
     messages

@@ -20,13 +20,10 @@ intents = nextcord.Intents.all()
 intents.members = True
 bot = commands.Bot(intents = intents)
 
-bot_name = os.getenv("BOT_NAME")
-bot_icon = os.getenv("BOT_ICON")
+
 status_channel = int(os.getenv("STATUS_CHANNEL"))
 announcements_channel = int(os.getenv("ANNOUNCEMENT_CHANNEL"))
 log_channel = int(os.getenv("LOG_CHANNEL"))
-channel_url = os.getenv("channel_url")
-channel_icon = os.getenv("channel_icon")
 
 
 count = 0
@@ -96,13 +93,17 @@ async def process_ws_queue():
             stream_game = ws_message["content"]["stream_game"]
             stream_title = ws_message["content"]["stream_title"]
             stream_thumbnail = ws_message["content"]["stream_thumbnail"]
+            channel_url = "From ws message dict"
 
             twitch_embed = twitch_notification(
                 broadcaster_name = broadcaster_name,
                 channel_image_url = channel_image_url,
                 stream_game = stream_game, 
                 stream_title = stream_title,
-                stream_thumbnail = stream_thumbnail
+                stream_thumbnail = stream_thumbnail,
+                channel_url = channel_url,
+                bot_name = bot.user.name,
+                bot_icon = bot.user.avatar.url
             )
 
             await bot.get_channel(announcements_channel).send(f"@everyone {broadcaster_name} is now live on Twitch!", embed = twitch_embed)
