@@ -36,7 +36,7 @@ async def user_info(session: aiohttp.ClientSession, token: str, client_id: str, 
         response_json = await response.json()
 
         if response_json["data"]:
-            broadcaster_id = response_json["data"][0]["display_name"]
+            broadcaster_id = response_json["data"][0]["id"]
             profile_image_url = response_json["data"][0]["profile_image_url"]
             
             return broadcaster_id, profile_image_url
