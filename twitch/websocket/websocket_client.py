@@ -20,7 +20,6 @@ token= os.getenv("twitch_oauth_token")
 client_id= os.getenv("twitch_client_id")
 websocket_endpoint= os.getenv("twitch_websocket_server")
 subscription_endpoint= os.getenv("twitch_eventsub_subscriptions")
-broadcaster_id= os.getenv("broadcaster_id")
 broadcaster_login= os.getenv("broadcaster_login")
 stream_info_endpoint = os.getenv("stream_info_endpoint")
 
@@ -64,6 +63,8 @@ async def websocket_client(ws, session):
                         print(f"\nConnected to websocket session @{websocket_endpoint}, Status: {session_status}")
                         print(f"session ID: {session_id}")
 
+                        broadcaster_id, _ = user_info(session = session, token = token, client_id = client_id, broadcaster_login = broadcaster_login)
+
                         status, sub_type, broadcaster= await stream_online(
                             session = session,
                             url = subscription_endpoint,
@@ -104,13 +105,13 @@ async def websocket_client(ws, session):
                             braodcaster_id = broadcaster_id,
                             )
                         
-                        channel_image_url = await user_info(session = session, token = token, client_id = client_id, broadcaster_login = broadcaster_login)
+                        _, profile_image_url = await user_info(session = session, token = token, client_id = client_id, broadcaster_login = broadcaster_login)
 
                         ws_message= {
                             "message" : "notification",
                             "content" : {
                                 "broadcaster_name" : broadcaster_name,
-                                "channel_image_url" : channel_image_url,
+                                "profile_image_url" : profile_image_url,
                                 "type" : sub_type,
                                 "stream_game" : stream_game_name,
                                 "stream_type" : stream_type,

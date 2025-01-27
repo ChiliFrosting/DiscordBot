@@ -1,7 +1,6 @@
 
 """ Module to construct bot messages from websocket clients """
 
-import asyncio
 from datetime import datetime, timezone
 
 import nextcord

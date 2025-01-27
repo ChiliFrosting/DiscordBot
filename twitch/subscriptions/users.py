@@ -1,7 +1,27 @@
 
 """ This module contains all the functions related to Twitch API user subscriptions & info """
 
-async def user_info(session, token, client_id, broadcaster_login):
+from typing import Optional, Tuple, Awaitable
+
+import aiohttp
+
+async def user_info(session: aiohttp.ClientSession, token: str, client_id: str, broadcaster_login: str):
+    """ 
+    Fetch user/broadcaster information.
+
+    ## Args:
+        session (aiohttp.ClientSession): Aiohttp session instance 
+        token (str): Twitch OAuth user access token
+        client_id (str): Twitch app client ID
+        broadcaster_login (str): Twitch username as in the URL, all lowercase
+
+    ## Returns:
+        tuple: 
+            str: Twitch broadcaster ID
+            str: Twitch broadcaster profile image URL
+
+        None: If broadcaster not found
+    """
 
     headers = {
         "Authorization" : f"Bearer {token}",
@@ -16,9 +36,10 @@ async def user_info(session, token, client_id, broadcaster_login):
         response_json = await response.json()
 
         if response_json["data"]:
-            channel_image_url = response_json["data"][0]["profile_image_url"]
+            broadcaster_id = response_json["data"][0]["display_name"]
+            profile_image_url = response_json["data"][0]["profile_image_url"]
             
-            return channel_image_url
+            return broadcaster_id, profile_image_url
         
         else: 
             return None

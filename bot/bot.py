@@ -1,6 +1,5 @@
 
 import os
-import asyncio
 
 from bot.bot_responses import twitch_notification
 from bot.async_events import process_queue_event
@@ -89,7 +88,7 @@ async def process_ws_queue():
         elif ws_message["message"] == "notification":
 
             broadcaster_name = ws_message["content"]["broadcaster_name"]
-            channel_image_url = ws_message["content"]["channel_image_url"]
+            profile_image_url = ws_message["content"]["profile_image_url"]
             stream_game = ws_message["content"]["stream_game"]
             stream_title = ws_message["content"]["stream_title"]
             stream_thumbnail = ws_message["content"]["stream_thumbnail"]
@@ -97,7 +96,7 @@ async def process_ws_queue():
 
             twitch_embed = twitch_notification(
                 broadcaster_name = broadcaster_name,
-                channel_image_url = channel_image_url,
+                profile_image_url = profile_image_url,
                 stream_game = stream_game, 
                 stream_title = stream_title,
                 stream_thumbnail = stream_thumbnail,
