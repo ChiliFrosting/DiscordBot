@@ -23,11 +23,11 @@ async def token_validation_task(session):
     await bot.wait_until_ready()
     await process_queue_event.wait()
 
-    token= os.getenv("twitch_oauth_token")
-    url = "https://id.twitch.tv/oauth2/validate"
-    headers = {"Authorization": f"Bearer {token}"}
-
     while True:
+        token = os.getenv("twitch_oauth_token")
+        url = "https://id.twitch.tv/oauth2/validate"
+        headers = {"Authorization" : f"Bearer {token}"}
+
         async with session.get(url= url, headers= headers) as response:
             response_status= response.status
     
