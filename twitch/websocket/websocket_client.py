@@ -63,7 +63,7 @@ async def websocket_client(ws, session):
                         print(f"\nConnected to websocket session @{websocket_endpoint}, Status: {session_status}")
                         print(f"session ID: {session_id}")
 
-                        broadcaster_id, _ = user_info(session = session, token = token, client_id = client_id, broadcaster_login = broadcaster_login)
+                        broadcaster_id, _ = await user_info(session = session, token = token, client_id = client_id, broadcaster_login = broadcaster_login)
 
                         status, sub_type, broadcaster= await stream_online(
                             session = session,
