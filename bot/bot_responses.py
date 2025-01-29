@@ -21,7 +21,7 @@ async def twitch_notification(
     messages
     """
     embed = nextcord.Embed(
-        color = nextcord.Color.blurple,
+        color = nextcord.Color.blurple(),
         title = stream_title,
         type = "rich",
         url = channel_url
