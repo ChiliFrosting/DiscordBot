@@ -94,7 +94,7 @@ async def process_ws_queue():
             stream_thumbnail = ws_message["content"]["stream_thumbnail"]
             channel_url = "From ws message dict"
 
-            twitch_embed = twitch_notification(
+            twitch_embed = await twitch_notification(
                 broadcaster_name = broadcaster_name,
                 profile_image_url = profile_image_url,
                 stream_game = stream_game, 
