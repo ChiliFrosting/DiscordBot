@@ -85,10 +85,10 @@ async def websocket_client(ws, session):
                             await ws_message_queue.put(ws_message)
                             
                         elif "stream.online" in sub_type and "disabled" in status: 
-                            print(f"Subscription request for {broadcaster_login} failed, status: {status} & type:{sub_type}\nTime: {datetime.now()}")
+                            print(f"Subscription request for {broadcaster_login} failed, status: {status} & type:{sub_type}\nTime: {datetime.now(timezone.utc)}")
 
                         else: 
-                            (f"Unexpected error: Subscription request failed, Time: {datetime.now()}")
+                            (f"Unexpected error: Subscription request failed, Time: {datetime.now(timezone.utc)}")
 
                     case "session_keepalive":
                         print("Session keepalive frame received")
