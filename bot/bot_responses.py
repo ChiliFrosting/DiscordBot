@@ -8,7 +8,7 @@ import nextcord
 
 async def twitch_notification(
                 broadcaster_name,
-                channel_image_url,
+                profile_image_url,
                 stream_game,
                 stream_title,
                 stream_thumbnail,
@@ -29,7 +29,7 @@ async def twitch_notification(
     embed.set_author(
         name = f"{broadcaster_name} is now live on Twitch!",
         url = channel_url,
-        icon_url = channel_image_url,
+        icon_url = profile_image_url,
     )
     embed.set_image(url = stream_thumbnail)
     embed.add_field(name = "Game", value = stream_game)
