@@ -16,7 +16,16 @@ async def token_validation_task(session):
     hourly, this function does just that. This function runs concurrently with the others
     in the main entry point and shares the event loop.
 
-    invalid token? doesn't do a thing... for now at least
+
+    After the nextcord bot is ready, checks if the access token is valid and does the following:
+    - if token is valid -> `OAuth_valid_event` is set, signaling the websocket client to run
+    - if token is invalid -> `OAuth_valid_event` is unset interrupting the websocket client
+
+    ## Args: 
+    `session` (`aiohttp.ClientSession`): Aiohttp session instance
+
+    ## Returns: 
+    `None`: Returns no value
     """
     
     # TODO: flag to stop websocket client from connecting until access token is renewed

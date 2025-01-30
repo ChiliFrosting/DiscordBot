@@ -1,13 +1,13 @@
 
 """
-Independant module to obtain Broadcaster ID from Broadcaster login
+Independant testing module. obtain Broadcaster ID from Broadcaster login
 Broadcaster login is the broadcaster's user name all lowercase
 """
 
 import asyncio
-import aiohttp
 import os
 
+import aiohttp
 from dotenv import load_dotenv
 
 
@@ -33,16 +33,13 @@ async def user_info():
 
         async with session.get(url= url, headers= headers, params= params) as response:
 
-            get_user_id= await response.json()
-            print(get_user_id)
-            #data= get_user_id.json()
-            #print(data)
-            user_id= get_user_id["data"][0]["id"]
-            print(f"user ID is {user_id}")
+            response_json = await response.json()
+            broadcaster_id = response_json["data"][0]["id"]
+            print(f"user ID is {broadcaster_id}")
 
             url= "https://api.twitch.tv/helix/channels"
             params= {
-                "broadcaster_id": user_id
+                "broadcaster_id": broadcaster_id
                 }
             
         async with session.get(url= url, headers= headers, params= params) as response:

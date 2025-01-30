@@ -10,17 +10,15 @@ async def user_info(session: aiohttp.ClientSession, token: str, client_id: str, 
     Fetch user/broadcaster information.
 
     ## Args:
-        session (aiohttp.ClientSession): Aiohttp session instance 
-        token (str): Twitch OAuth user access token
-        client_id (str): Twitch app client ID
-        broadcaster_login (str): Twitch username as in the URL, all lowercase
+    `session` (aiohttp.ClientSession): Aiohttp session instance 
+    `token` (str): Twitch OAuth user access token
+    `client_id` (str): Twitch app client ID
+    `broadcaster_login` (str): Twitch username as in the URL, all lowercase
 
     ## Returns:
-        tuple: 
-            str: Twitch broadcaster ID
-            str: Twitch broadcaster profile image URL
-
-        None: If broadcaster not found
+    Tuple[[Optional[str], [Optional[str]]: None if broadcaster not found
+        - str: Twitch broadcaster ID
+        - str: Twitch broadcaster profile image URL
     """
 
     headers = {

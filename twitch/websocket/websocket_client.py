@@ -27,11 +27,12 @@ stream_info_endpoint = os.getenv("stream_info_endpoint")
 async def websocket_client_runtime(session):
     await bot.wait_until_ready()
     
-    websocket_url= websocket_endpoint
+    websocket_url = websocket_endpoint
     while True: 
 
         try: 
             await OAuth_valid_event.wait()
+
             print(f"Connecting to websocket session @{websocket_url} . . . .")
             async with session.ws_connect(websocket_url) as ws:
                 new_websocket_url= await websocket_client(ws, session)
@@ -48,7 +49,7 @@ async def websocket_client_runtime(session):
 async def websocket_client(ws, session):
     while True:
         
-        message= await ws.receive()
+        message = await ws.receive()
         match message.type:
 
             case aiohttp.WSMsgType.TEXT:
@@ -65,7 +66,7 @@ async def websocket_client(ws, session):
 
                         broadcaster_id, _ = await user_info(session = session, token = token, client_id = client_id, broadcaster_login = broadcaster_login)
 
-                        status, sub_type, broadcaster= await stream_online(
+                        status, sub_type, broadcaster = await stream_online(
                             session = session,
                             url = subscription_endpoint,
                             token = token,
@@ -92,20 +93,21 @@ async def websocket_client(ws, session):
 
                     case "session_keepalive":
                         print("Session keepalive frame received")
+                        # TODO: add reconnection flow if keepalive frame not received when expected
                         
 
                     case "notification":
                         print(f"Stream.Online event notification received from endpoint: {websocket_endpoint}")
 
-                        broadcaster_name, stream_game_name, stream_type, stream_title, stream_start_time, stream_thumbnail = await stream_info(
+                        broadcaster_id, profile_image_url = await user_info(session = session, token = token, client_id = client_id, broadcaster_login = broadcaster_login)
+
+                        broadcaster_name, stream_game, stream_type, stream_title, stream_start_time, stream_thumbnail = await stream_info(
                             session = session,
                             url = stream_info_endpoint,
                             token = token,
                             client_id = client_id,
                             braodcaster_id = broadcaster_id,
                             )
-                        
-                        _, profile_image_url = await user_info(session = session, token = token, client_id = client_id, broadcaster_login = broadcaster_login)
 
                         ws_message= {
                             "message" : "notification",
@@ -113,7 +115,7 @@ async def websocket_client(ws, session):
                                 "broadcaster_name" : broadcaster_name,
                                 "profile_image_url" : profile_image_url,
                                 "type" : sub_type,
-                                "stream_game" : stream_game_name,
+                                "stream_game" : stream_game,
                                 "stream_type" : stream_type,
                                 "stream_title" : stream_title,
                                 "stream_start_time" : stream_start_time,
@@ -124,9 +126,9 @@ async def websocket_client(ws, session):
                         await ws_message_queue.put(ws_message)
 
                     case "session_reconnect":
-                        reconnect_url= message_dict["payload"]["session"]["reconnect_url"]
+                        reconnect_url = message_dict["payload"]["session"]["reconnect_url"]
                         print(reconnect_url)
-                        ws_message= {
+                        ws_message = {
                             "message" : "reconnect_request",
                             "content" : {
                                 "reconnect_url" : reconnect_url
@@ -137,9 +139,18 @@ async def websocket_client(ws, session):
 
                     case "revocation":
                         print("authorization for subscription revoked")
-                        status= message_dict["payload"]["subscription"]["status"]
-                        sub_type= message_dict["payload"]["subscription"]["type"]
-                        ws_message= {"message" : "revocation", "content" : {"broadcaster_login" : broadcaster_login, "type" : sub_type, "status" : status}}
+                        status = message_dict["payload"]["subscription"]["status"]
+                        sub_type = message_dict["payload"]["subscription"]["type"]
+
+                        ws_message = {
+                            "message" : "revocation",
+                            "content" : {
+                                "broadcaster_login" : broadcaster_login,
+                                "type" : sub_type,
+                                "status" : status
+                            }
+                        }
+                        
                         await ws_message_queue.put(ws_message)
 
             case aiohttp.WSMsgType.CLOSED:
