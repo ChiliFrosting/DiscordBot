@@ -18,7 +18,20 @@ async def twitch_notification(
 ):
     """
     Constructor for bot embeds representing Twitch websocket notification
-    messages
+    messages.
+
+    ## Args:
+        - broadcaster_name (str): notifications for this broadcaster/user 
+        - profile_image_url (str): user profile image url
+        - stream_game (str): stream game name
+        - stream_title (str): stream title
+        - stream_thumbnail (str): stream thumbnail url
+        - channel_url (str): broadcaster/user channel url
+        - bot_name (str): name of the discord bot (can be changed to modify embed footer)
+        - bot_icon (str): bot icon url (can be changed to modify icon in embed footer)
+
+    ## Retruns: 
+        - nextcord.Embed: a formatted Embed message, an instance of nextcord.Embed class
     """
     embed = nextcord.Embed(
         color = nextcord.Color.blurple(),
