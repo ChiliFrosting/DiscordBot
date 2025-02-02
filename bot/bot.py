@@ -92,7 +92,7 @@ async def process_ws_queue():
             stream_game = ws_message["content"]["stream_game"]
             stream_title = ws_message["content"]["stream_title"]
             stream_thumbnail = ws_message["content"]["stream_thumbnail"]
-            channel_url = f"https://www.twitch.tv/{broadcaster_name}"
+            channel_url = f"https://www.twitch.tv/{broadcaster_login}"
 
             twitch_embed = await twitch_notification(
                 broadcaster_name = broadcaster_name,

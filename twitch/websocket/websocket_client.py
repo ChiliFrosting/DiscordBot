@@ -53,14 +53,14 @@ async def websocket_client(ws, session):
         match message.type:
 
             case aiohttp.WSMsgType.TEXT:
-                message_dict= json.loads(message.data)
-                message_type= message_dict["metadata"]["message_type"]
+                message_json= json.loads(message.data)
+                message_type= message_json["metadata"]["message_type"]
 
                 match message_type: 
 
                     case "session_welcome":
-                        session_id= message_dict["payload"]["session"]["id"]
-                        session_status= message_dict["payload"]["session"]["status"]
+                        session_id= message_json["payload"]["session"]["id"]
+                        session_status= message_json["payload"]["session"]["status"]
                         print(f"\nConnected to websocket session @{websocket_endpoint}, Status: {session_status}")
                         print(f"session ID: {session_id}")
 
@@ -94,8 +94,8 @@ async def websocket_client(ws, session):
                     case "session_keepalive":
                         print("Session keepalive frame received")
                         # TODO: add reconnection flow if keepalive frame not received when expected
-                        
-
+                        keepalive_timestamp = message_json=["metadata"]["message_timestamp"]
+                        print(f"Keepalive received at: {keepalive_timestamp}")
                     case "notification":
                         print(f"Stream.Online event notification received from endpoint: {websocket_endpoint}")
 
@@ -126,7 +126,7 @@ async def websocket_client(ws, session):
                         await ws_message_queue.put(ws_message)
 
                     case "session_reconnect":
-                        reconnect_url = message_dict["payload"]["session"]["reconnect_url"]
+                        reconnect_url = message_json["payload"]["session"]["reconnect_url"]
                         print(reconnect_url)
                         ws_message = {
                             "message" : "reconnect_request",
@@ -139,8 +139,8 @@ async def websocket_client(ws, session):
 
                     case "revocation":
                         print("authorization for subscription revoked")
-                        status = message_dict["payload"]["subscription"]["status"]
-                        sub_type = message_dict["payload"]["subscription"]["type"]
+                        status = message_json["payload"]["subscription"]["status"]
+                        sub_type = message_json["payload"]["subscription"]["type"]
 
                         ws_message = {
                             "message" : "revocation",
