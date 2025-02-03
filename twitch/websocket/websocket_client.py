@@ -18,8 +18,8 @@ load_dotenv(override=True)
 
 token= os.getenv("twitch_oauth_token")
 client_id= os.getenv("twitch_client_id")
-websocket_endpoint= os.getenv("twitch_websocket_server")
-subscription_endpoint= os.getenv("twitch_eventsub_subscriptions")
+websocket_endpoint= os.getenv("twitch_cli_websocket")
+subscription_endpoint= os.getenv("twitch_cli_eventsub")
 broadcaster_login= os.getenv("broadcaster_login")
 stream_info_endpoint = os.getenv("stream_info_endpoint")
 
@@ -94,8 +94,17 @@ async def websocket_client(ws, session):
                     case "session_keepalive":
                         print("Session keepalive frame received")
                         # TODO: add reconnection flow if keepalive frame not received when expected
-                        keepalive_timestamp = message_json=["metadata"]["message_timestamp"]
+                        keepalive_timestamp = (message_json["metadata"]["message_timestamp"])[:-2] + "Z"
+
                         print(f"Keepalive received at: {keepalive_timestamp}")
+
+                        time_now = datetime.now(timezone.utc)
+                        keepalive_timestamp_datetime = datetime.strptime(keepalive_timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
+                        keepalive_aware = keepalive_timestamp_datetime.replace(tzinfo = timezone.utc)
+                        keepalive_delta = time_now - keepalive_aware
+                        print(f"last keepalive message @{keepalive_delta.total_seconds()}")
+                        
+
                     case "notification":
                         print(f"Stream.Online event notification received from endpoint: {websocket_endpoint}")
 
