@@ -56,7 +56,7 @@ class DelMsgs(commands.Cog):
         """
         
         delmsgs_yes = Button(label = "Yes", style = ButtonStyle.danger, emoji = "\N{Wastebasket}", disabled = False)
-        delmsgs_no = Button(labe = "No", style = ButtonStyle.green, emoji = "\N{Cross Mark}", disabled = False)
+        delmsgs_no = Button(label = "No", style = ButtonStyle.green, emoji = "\N{Cross Mark}", disabled = False)
 
 
         """
