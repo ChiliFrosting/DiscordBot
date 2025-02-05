@@ -94,7 +94,7 @@ async def process_ws_queue():
             stream_thumbnail = ws_message["content"]["stream_thumbnail"]
             channel_url = f"https://www.twitch.tv/{broadcaster_login}"
 
-            twitch_embed = await twitch_notification(
+            twitch_embed, twitch_embed_button = await twitch_notification(
                 broadcaster_name = broadcaster_name,
                 profile_image_url = profile_image_url,
                 stream_game = stream_game, 
@@ -105,7 +105,7 @@ async def process_ws_queue():
                 bot_icon = bot.user.avatar.url
             )
 
-            await bot.get_channel(announcements_channel).send(f"@everyone {broadcaster_name} is now live on Twitch!", embed = twitch_embed)
+            await bot.get_channel(announcements_channel).send(f"@everyone {broadcaster_name} is now live on Twitch!", embed = twitch_embed, view = twitch_embed_button)
 
             ws_message_queue.task_done()
 

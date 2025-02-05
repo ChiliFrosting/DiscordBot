@@ -1,6 +1,7 @@
 
 """ Module to construct bot messages from websocket clients """
 
+import time
 from datetime import datetime, timezone
 
 import nextcord
@@ -21,17 +22,18 @@ async def twitch_notification(
     messages.
 
     ## Args:
-        - broadcaster_name (str): notifications for this broadcaster/user 
-        - profile_image_url (str): user profile image url
-        - stream_game (str): stream game name
-        - stream_title (str): stream title
-        - stream_thumbnail (str): stream thumbnail url
-        - channel_url (str): broadcaster/user channel url
-        - bot_name (str): name of the discord bot (can be changed to modify embed footer)
-        - bot_icon (str): bot icon url (can be changed to modify icon in embed footer)
+        - Broadcaster_name (str): notifications for this broadcaster/user 
+        - Profile_image_url (str): user profile image url
+        - Stream_game (str): stream game name
+        - Stream_title (str): stream title
+        - Stream_thumbnail (str): stream thumbnail url
+        - Channel_url (str): broadcaster/user channel url
+        - Bot_name (str): name of the discord bot (can be changed to modify embed footer)
+        - Bot_icon (str): bot icon url (can be changed to modify icon in embed footer)
 
     ## Retruns: 
-        - nextcord.Embed: a formatted Embed message, an instance of nextcord.Embed class
+        - nextcord.Embed: A formatted Embed message, an instance of nextcord.Embed class
+        - nextcord.ui.View: A view with a button including a url to the channel 
     """
     embed = nextcord.Embed(
         color = nextcord.Color.blurple(),
@@ -44,9 +46,21 @@ async def twitch_notification(
         url = channel_url,
         icon_url = profile_image_url,
     )
-    embed.set_image(url = stream_thumbnail)
+    embed.set_image(url = f"{stream_thumbnail}?t={int(time.time())}") # Time is used to bust the cache
     embed.add_field(name = "Game", value = stream_game)
     embed.set_footer(text = bot_name, icon_url = bot_icon)
     embed.timestamp = datetime.now(timezone.utc)
 
-    return embed
+
+    button = nextcord.ui.Button(
+        label = "Click me!",
+        style = nextcord.ButtonStyle.link,
+        url = channel_url,
+        disabled = False
+    )
+
+    view = nextcord.ui.View()
+    view.add_item(button)
+
+
+    return embed, view
