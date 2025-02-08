@@ -4,7 +4,9 @@
 # if you want python 3.11 or later and don't need any voice chat features from nextcord,
 # you may comment out import instances such as in player.py in the package.
 # worked well for me but I wouldn't trust me 
- 
-nextcord==3.0.1
+
+
+# Necessary packages
+nextcord==2.6.0
 python-dotenv==1.0.1
-aiohttp==3.11.11
+aiohttp==3.11.10
