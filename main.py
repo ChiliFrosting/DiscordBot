@@ -1,3 +1,4 @@
+""" Main entry point """
 
 import asyncio
 
@@ -8,7 +9,7 @@ from twitch.OAuth.App.app import start_app
 from bot.bot import bot_task, process_ws_queue
 
 
-async def main():
+async def main() -> None:
     async with aiohttp.ClientSession() as session:
 
         await asyncio.gather(

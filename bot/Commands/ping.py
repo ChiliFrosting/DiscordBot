@@ -1,3 +1,4 @@
+""" This module represents the ping command, will reply with Pong where ever its invoked """
 
 import os
 
@@ -27,7 +28,7 @@ class Ping(commands.Cog):
         self.bot = bot
 
     @nextcord.slash_command(name = "ping", description = "are you there?", guild_ids = [guild_id])
-    async def ping(self, interaction: nextcord.Interaction):
+    async def ping(self, interaction: nextcord.Interaction) -> None:
         await interaction.send("Pong!")
 
 

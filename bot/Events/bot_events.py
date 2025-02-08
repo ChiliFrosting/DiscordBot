@@ -1,9 +1,13 @@
+""" This module contains all events relevant to the bot """
 
 import os 
 
 from dotenv import load_dotenv
 from nextcord.ext import commands
 import nextcord
+
+import nextcord.ext
+import nextcord.ext.commands
 
 
 load_dotenv(override = True)
@@ -21,7 +25,7 @@ class bot_Events(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_ready(self):
+    async def on_ready(self) -> None:
         """ 
         This event listener waits for the bot to connect to the Discord API, then sets rich presence & posts ready messages
         """

@@ -1,10 +1,11 @@
+""" This module represents the verification command, guides new members through the verification flow """
 
 import asyncio
 import os
 
 import nextcord 
 from nextcord.ext import commands
-from nextcord import File, ButtonStyle
+from nextcord import ButtonStyle
 from nextcord.ui import Button, View
 from dotenv import load_dotenv
 
@@ -25,7 +26,7 @@ class Verify(commands.Cog):
         self.bot = bot
 
     @nextcord.slash_command(name = "verify", guild_ids = [guild_id], description = "Start Verification")
-    async def verify(self, interaction: nextcord.Interaction):
+    async def verify(self, interaction: nextcord.Interaction) -> None:
         """
         This function handles member verification.
 
@@ -53,7 +54,7 @@ class Verify(commands.Cog):
 
         # Button object callback functions, this handles what happens when the corresponding button is pressed, message is then edited to disable buttons
         # XXXX_callback where "XXXX" is the name of the button object 
-        async def verify_callback(interaction): 
+        async def verify_callback(interaction: nextcord.Interaction) -> None: 
             try:
                 verify.disabled = True
                 await interaction.response.edit_message(view = verify_view)

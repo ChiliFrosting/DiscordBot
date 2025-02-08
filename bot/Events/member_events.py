@@ -1,3 +1,4 @@
+""" This module contains all events relevant to guild/server members"""
 
 import os
 
@@ -15,11 +16,12 @@ verification_channel_url = os.getenv("VERIFY_CHANNEL_URL")
 
 class member_Events(commands.Cog):
     """ Class/Cog containing member related event listeners """
+
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_member_join(self, member):
+    async def on_member_join(self, member) -> None:
         """
         This event listener waits for a new member to join the guild/server, sends a welcome message 
         in the system channel if set & directs members to the verification flow

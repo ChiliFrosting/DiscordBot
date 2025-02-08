@@ -11,10 +11,10 @@ import aiohttp
 from dotenv import load_dotenv
 
 
-load_dotenv(override= True)
+load_dotenv(override = True)
 
 
-async def user_info():
+async def user_info() -> None:
 
     token= os.getenv("twitch_oauth_token")
     client_id= os.getenv("twitch_client_id")

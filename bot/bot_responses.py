@@ -8,15 +8,16 @@ import nextcord
 
 
 async def twitch_notification(
-                broadcaster_name,
-                profile_image_url,
-                stream_game,
-                stream_title,
-                stream_thumbnail,
-                channel_url,
-                bot_name,
-                bot_icon
-):
+                broadcaster_name: str,
+                profile_image_url: str,
+                stream_game: str,
+                stream_title: str,
+                stream_thumbnail: str,
+                channel_url: str,
+                bot_name: str,
+                bot_icon: str
+) -> tuple[nextcord.Embed, nextcord.ui.View]:
+    
     """
     Constructor for bot embeds representing Twitch websocket notification
     messages.
@@ -35,6 +36,7 @@ async def twitch_notification(
         - nextcord.Embed: A formatted Embed message, an instance of nextcord.Embed class
         - nextcord.ui.View: A view with a button including a url to the channel 
     """
+
     embed = nextcord.Embed(
         color = nextcord.Color.blurple(),
         title = stream_title,

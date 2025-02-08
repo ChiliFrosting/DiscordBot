@@ -1,3 +1,4 @@
+""" This module contains all functions related to the websocket client for Twitch"""
 
 import asyncio
 import json
@@ -13,18 +14,18 @@ from bot.bot import bot
 from bot.async_events import OAuth_valid_event
 
 
-load_dotenv(override=True)
+load_dotenv(override = True)
 
 
-token= os.getenv("twitch_oauth_token")
-client_id= os.getenv("twitch_client_id")
-websocket_endpoint= os.getenv("twitch_cli_websocket")
-subscription_endpoint= os.getenv("twitch_cli_eventsub")
-broadcaster_login= os.getenv("broadcaster_login")
+token = os.getenv("twitch_oauth_token")
+client_id = os.getenv("twitch_client_id")
+websocket_endpoint = os.getenv("twitch_cli_websocket")
+subscription_endpoint = os.getenv("twitch_cli_eventsub")
+broadcaster_login = os.getenv("broadcaster_login")
 stream_info_endpoint = os.getenv("stream_info_endpoint")
 
 
-async def websocket_client_runtime(session):
+async def websocket_client_runtime(session: aiohttp.ClientSession) -> None:
     await bot.wait_until_ready()
     
     websocket_url = websocket_endpoint
@@ -46,7 +47,7 @@ async def websocket_client_runtime(session):
             await asyncio.sleep(5)
 
 
-async def websocket_client(ws, session):
+async def websocket_client(ws: aiohttp.ClientWebSocketResponse, session: aiohttp.ClientSession) -> None:
     while True:
         
         message = await ws.receive()
@@ -79,7 +80,7 @@ async def websocket_client(ws, session):
                             ws_message= {
                                 "message": "subscription_request",
                                 "content" : {
-                                    "status" : {status}, "type" : {sub_type}, "broadcaster_login" : {broadcaster_login}
+                                    "status" : status, "type" : sub_type, "broadcaster_login" : broadcaster_login
                                     }
                                 }
                             

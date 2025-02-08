@@ -1,3 +1,4 @@
+""" This module is the main bot module """
 
 import os
 
@@ -40,7 +41,7 @@ for filename in os.listdir("./bot/Events"):
 print(f"{count} Event Extensions Loaded")
 
 
-async def process_ws_queue():
+async def process_ws_queue() -> None:
     """
     This function processes the websocket message queue & implements the logic based on the "message" key value.
 

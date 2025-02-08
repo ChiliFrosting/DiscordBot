@@ -1,3 +1,4 @@
+""" This module represents the Delete messages command, this command deletes all messages in the channel its invoked in """
 
 import os
 from datetime import date
@@ -38,7 +39,7 @@ class DelMsgs(commands.Cog):
         self.bot = bot
 
     @nextcord.slash_command(name = "delmsgs", guild_ids = [guild_id], description = "Delete all messages in the channel")
-    async def delmsgs(self, interaction: nextcord.Interaction):
+    async def delmsgs(self, interaction: nextcord.Interaction) -> None:
         
         #verifies user has moderator role, sets command channel to current channel
         role = nextcord.utils.get(interaction.guild.roles, name = mod_role_name)
@@ -64,7 +65,7 @@ class DelMsgs(commands.Cog):
         The functions take "interaction" instance as their only argument.
         """ 
 
-        async def delmsgs_yes_callback(interaction):
+        async def delmsgs_yes_callback(interaction: nextcord.Interaction) -> None:
             try:
                 delmsgs_yes.disabled, delmsgs_no.disabled = True, True
                 await interaction.response.edit_message(view = delmsgs_view)
@@ -77,7 +78,7 @@ class DelMsgs(commands.Cog):
         
 
         # Function for "no" button object
-        async def delmsgs_no_callback(interaction):
+        async def delmsgs_no_callback(interaction: nextcord.Interaction) -> None:
             try:
                 delmsgs_yes.disabled, delmsgs_no.disabled = True, True
                 await interaction.response.edit_message(view = delmsgs_view)

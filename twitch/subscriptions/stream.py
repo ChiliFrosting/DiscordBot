@@ -1,7 +1,17 @@
 
 """ This module contains all the functions related to Twitch API stream subscriptions & info """
 
-async def stream_online(session, url, token, client_id, session_id, broadcaster_id):
+import aiohttp
+
+
+async def stream_online(
+        session: aiohttp.ClientSession,
+        url: str,
+        token: str,
+        client_id: str,
+        session_id: str,
+        broadcaster_id: str
+) -> tuple[str, str | None, str | None]:
     """
     This function sends a stream.online subscription request through the eventsub API
     for the broadcaster ID provided to it.
@@ -52,11 +62,18 @@ async def stream_online(session, url, token, client_id, session_id, broadcaster_
             print(f"\nSubscription request sucessful!\nSubscription Details:\nType: {sub_type}\nBroadcaster: {broadcaster}")
             return status, sub_type, broadcaster
         else: 
-            status, sub_type, broadcaster= "disabled", None, None
+            status, sub_type, broadcaster = "disabled", None, None
             return status, sub_type, broadcaster
 
 
-async def stream_info(session, url, token, client_id, braodcaster_id):
+async def stream_info(
+        session: aiohttp.ClientSession,
+        url: str,
+        token: str,
+        client_id: str,
+        braodcaster_id: str
+) -> tuple[str, str, str, str, str, str] | None:
+    
     """
     This function obtains stream info for the Broadcaster ID provided.
 
@@ -97,7 +114,6 @@ async def stream_info(session, url, token, client_id, braodcaster_id):
             stream_start_time = response_json["data"][0]["started_at"]
             stream_thumbnail = response_json["data"][0]["thumbnail_url"].replace("-{width}x{height}", "-400x225")
             #Stream thumbnail url: https://static-cdn.jtvnw.net/previews-ttv/live_user_channelName-{width}x{height}.jpg
-
 
             if not stream_type == "live":
                 return None

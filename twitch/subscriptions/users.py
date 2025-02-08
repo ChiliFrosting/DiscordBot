@@ -1,11 +1,15 @@
 
 """ This module contains all the functions related to Twitch API user subscriptions & info """
 
-from typing import Optional, Tuple, Awaitable
-
 import aiohttp
 
-async def user_info(session: aiohttp.ClientSession, token: str, client_id: str, broadcaster_login: str):
+async def user_info(
+        session: aiohttp.ClientSession,
+        token: str,
+        client_id: str,
+        broadcaster_login: str
+) -> tuple[str, str] | None:
+
     """ 
     Fetch user/broadcaster information.
 
