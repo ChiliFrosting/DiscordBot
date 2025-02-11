@@ -51,19 +51,21 @@ class member_Events(commands.Cog):
         self.unverified[member.id] = member.joined_at
         print (self.unverified)
 
-        verification_check(member)
+        await self.verification_check(member)
 
 
-        async def verification_check(self, member: nextcord.Member) -> None:
-            await asyncio.sleep(86400)
+    async def verification_check(self, member: nextcord.Member) -> None:
+        await asyncio.sleep(30)
+        role = nextcord.utils.get(member.guild.roles, name = verified_role_name)
 
-            if member.id in self.unverified:
-                del self.unverified[member.id]
-                if verified_role_name not in member.roles: 
-                    await member.kick(reason = f"{member.name} did not verify within grace period")
+        if member.id in self.unverified:
+            del self.unverified[member.id]
+            if role not in member.roles: 
+                await member.kick(reason = f"{member.name} did not verify within grace period")
+                await self.bot.get_channel(mod_channel).send(f"Member {member.name} was kicked, did not attempt verification.") 
             
 
-            
+
 
 # Register the class/cog with the bot, supports loading/unloading although not currently implemented           
 def setup(bot: commands.Bot) -> None:
