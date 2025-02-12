@@ -5,15 +5,16 @@ import asyncio
 import os
 from datetime import date
 
+from dotenv import load_dotenv
 import nextcord
 from nextcord.ext import commands
-from dotenv import load_dotenv
 
 
 load_dotenv(override = True)
 
 
 mod_channel = int(os.getenv("ADMIN_CHANNEL"))
+mod_role_name = os.getenv("ADMIN_ROLE_NAME")
 verification_channel_url = os.getenv("VERIFY_CHANNEL_URL")
 verified_role_name = os.getenv("ROLE_NAME")
 
@@ -23,6 +24,8 @@ class member_Events(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.unverified = {}
+        self.bot.threat_scores = {}
+        self.bot.temp_channels = {}
 
 
     async def verification_check(self, member: nextcord.Member) -> None:
@@ -38,9 +41,18 @@ class member_Events(commands.Cog):
 
         if member.id in self.unverified:
             del self.unverified[member.id]
+
+            if member.id in self.bot.threat_scores: 
+                del self.bot.threat_scores[member.id]
+
+            if member.id in self.bot.temp_channels:
+                del self.bot.temp_channels[member.id]
+
             if role not in member.roles: 
-                await member.kick(reason = f"{member.name} did not verify within grace period")
-                await self.bot.get_channel(mod_channel).send(f"Member {member.name} was kicked, did not attempt verification.")
+                await member.kick(reason = "Did not verify within grace period")
+                await self.bot.get_channel(mod_channel).send(
+                    f"Member {member.name} was kicked, did not complete verification within grace period."
+                )
 
 
     async def threat_score(self, member: nextcord.Member) -> tuple[str, bool, bool]:
@@ -68,7 +80,8 @@ class member_Events(commands.Cog):
 
 
         ## Returns:
-            tuple: a tuple with: 
+            tuple: a tuple with:
+                - int: member score 
                 - str: suggested action 
                 - bool: if member is a bot, True = Yes
                 - bool: if member is flagged as known spammer by discord, True = Yes
@@ -98,7 +111,7 @@ class member_Events(commands.Cog):
             score -= 5
 
         if member.pending is False:
-            score -= 10
+            score += 10
 
         if hypesquad_member in member.public_flags:
             score -= 10
@@ -107,12 +120,76 @@ class member_Events(commands.Cog):
             is_spam = True
 
         if score >= 20:
-            action = "manual_review"
-            return action, is_bot, is_spam
+            action = "Manual review"
+            return score, action, is_bot, is_spam
         
         elif score < 20: 
-            action = "auto_review"
-            return action, is_bot, is_spam
+            action = "Auto Verify"
+            return score, action, is_bot, is_spam
+
+
+    async def create_temp_channel(self, member: nextcord.Member) -> nextcord.TextChannel:
+        """
+        This is a helper function to create temporary verification channels 
+        for users who are not eligible for Auto verification. 
+        Creates a Channel visible only to the member and moderator role.
+
+        ## Args: 
+            - member (nextcord.Member): member that triggered the event
+
+        
+        ## Returns: 
+            - nextcord.TextChannel: the created temporary channel
+        """
+
+        mod_role = nextcord.utils.get(member.guild.roles, name = mod_role_name)
+        temp_channel_name = f"{member.name}-verification-channel"
+        permission_overwrites = {
+            member.guild.default_role: nextcord.PermissionOverwrite(view_channel = False),
+            member: nextcord.PermissionOverwrite(view_channel = True)
+        }
+
+        #mod permissions here
+        permission_overwrites[mod_role] = nextcord.PermissionOverwrite(view_channel = True)
+
+
+        temp_channel = await member.guild.create_text_channel(
+            name = temp_channel_name,
+            overwrites = permission_overwrites
+        )
+
+        self.bot.temp_channels[member.id] = {
+            "member name" : member.name, 
+            "channel name" : temp_channel_name
+        }
+
+        await temp_channel.send(f"Hey, {member.mention} this is your temp verification channel.")
+
+        return temp_channel
+    
+
+    async def delete_temp_channel(self, temp_channel: nextcord.TextChannel) -> None:
+        """
+        Helper function to delete temporary verification channels. 
+        
+        ## Args:
+            - temp_channel (nextcord.TextChannel): Channel to be deleted
+
+        ## Returns:
+            - None
+        """
+
+        try: 
+            await temp_channel.delete()
+
+        except nextcord.Forbidden:
+            await self.bot.get_channel(mod_channel).send(f"I don't have permission to delete {temp_channel}")
+
+        except nextcord.NotFound:
+            pass
+
+        except:
+            pass
         
 
     @commands.Cog.listener()
@@ -129,7 +206,6 @@ class member_Events(commands.Cog):
             - member (nextcord.Member): Member that triggered the event (member joining the server/guild in this case)
         """
 
-        await self.bot.get_channel(mod_channel).send(f"User: {member.name} has joined the server on {date.today()}")
         if member.guild.system_channel is not None:
             await member.guild.system_channel.send(f"Welcome to the lab {member.mention} \n"
                                                "Please read the rules and verify your humanity to access the server!\n"
@@ -140,9 +216,33 @@ class member_Events(commands.Cog):
             await self.bot.get_channel(mod_channel).send("GUILD SYSTEM CHANNEL NOT SET!\n" f"User: {member.name} has joined the server on {date.today()}")
 
         self.unverified[member.id] = member.joined_at
-        print (self.unverified)
+
+        score, action, is_bot, is_spam = await self.threat_score(member)
+        self.bot.threat_scores[member.id] = {
+            "member name" : member.name,
+            "score" : score,
+            "is_bot" : is_bot,
+            "is_spam" : is_spam,
+            "action" : action
+        }
+        print(self.bot.threat_scores)
+
+        await self.bot.get_channel(mod_channel).send(
+            f"User: {member.name} has joined the server on {date.today()}\n"
+            f"Scored {score}\n"
+            f"is this member a bot(discord app)? {is_bot}\n"
+            f"is this account flagged as spam? {is_spam}\n"
+            f"Recommended action: {action}"
+        )
+
+        if action == "Manual review":
+            await self.bot.get_channel(mod_channel).send(
+                f"Auto Verification is disabled for {member.name}"
+            )
+            temp_channel = await self.create_temp_channel(member)
 
         await self.verification_check(member)
+        await self.delete_temp_channel(temp_channel)
 
 
 # Register the class/cog with the bot, supports loading/unloading although not currently implemented           

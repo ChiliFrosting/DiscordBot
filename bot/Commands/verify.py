@@ -30,17 +30,16 @@ class Verify(commands.Cog):
         """
         This function handles member verification.
 
-        Args: 
-
-            name (str): Command name
-            guild_ids (list): list of guild/server IDs where the command should be used
-            description (str): Command description 
-            role (str): Verified role name
-            verify (callable obj): Button object setup for verification interaction
-            label (str): Button text
-            style (ButtonStyle): Sets button color
-            emoji (Unicode/Codepoints): Adds corresponding emoji to the button
-            disabled (bool): whether the button is active (interactable) or disabled (greyed out)
+        ## Args: 
+            - name (str): Command name
+            - guild_ids (list): list of guild/server IDs where the command should be used
+            - description (str): Command description 
+            - role (str): Verified role name
+            - verify (callable obj): Button object setup for verification interaction
+            - label (str): Button text
+            - style (ButtonStyle): Sets button color
+            - emoji (Unicode/Codepoints): Adds corresponding emoji to the button
+            - disabled (bool): whether the button is active (interactable) or disabled (greyed out)
 
         Raises: 
             Generic error cause procrastinating on this
@@ -77,20 +76,28 @@ class Verify(commands.Cog):
         verify_view.add_item(verify)
 
         # Interaction response message when initiating the verification command, checks if channel is correct 
-        try:
-            if interaction.channel_id == verification_channel_id:
-                if role not in interaction.user.roles:
-                    await interaction.send("By completing verification you are agreeing to the rules!", view = verify_view)
+        score = self.bot.threat_scores.get(interaction.user.id, {}).get("score")
+        is_bot = self.bot.threat_scores.get(interaction.user.id, {}).get("is_bot")
+        is_spam = self.bot.threat_scores.get(interaction.user.id, {}).get("is_spam")
 
+        if score < 20:
+            try:
+                if interaction.channel_id == verification_channel_id:
+                    if role not in interaction.user.roles:
+                        await interaction.send("By completing verification you are agreeing to the rules!", view = verify_view)
+
+                    else:
+                        await interaction.send("You're already verified", ephemeral = True)
                 else:
-                    await interaction.send("You're already verified", ephemeral = True)
-            else:
 
-                await interaction.send("Command cannot be used here!", ephemeral = True)
+                    await interaction.send("Command cannot be used here!", ephemeral = True)
 
-        except:
-            await interaction.send("Oops something went wrong, please contact administrator!")
-            self.bot.get_channel(mod_channel).send(f"something went wrong when verifying user: {interaction.user.global_name} aka {interaction.user.display_name} check terminal logging for details")
+            except:
+                await interaction.send("Oops something went wrong, please contact administrator!")
+                self.bot.get_channel(mod_channel).send(f"something went wrong when verifying user: {interaction.user.global_name} aka {interaction.user.display_name} check terminal logging for details")
+
+        elif score >= 20 | is_bot is True | is_spam is True:
+            await interaction.send("Sorry you can't proceed with verification, a mod will contact you at channel shortly to add your role")
             
 
 # Registers the class/cog with the bot, supports loading/unloading although not implemented currently            
