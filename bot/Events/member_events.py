@@ -2,11 +2,12 @@
 """ This module contains all events relevant to guild/server members"""
 
 import asyncio
-import os
 from datetime import date
+import os
 
-from dotenv import load_dotenv
 import nextcord
+from bot.bot import Bot
+from dotenv import load_dotenv
 from nextcord.ext import commands
 
 
@@ -18,14 +19,12 @@ mod_role_name = os.getenv("ADMIN_ROLE_NAME")
 verification_channel_url = os.getenv("VERIFY_CHANNEL_URL")
 verified_role_name = os.getenv("ROLE_NAME")
 
+
 class member_Events(commands.Cog):
     """ Class/Cog containing member related event listeners """
 
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
-        self.unverified = {}
-        self.bot.threat_scores = {}
-        self.bot.temp_channels = {}
 
 
     async def verification_check(self, member: nextcord.Member) -> None:
@@ -36,11 +35,11 @@ class member_Events(commands.Cog):
             member (nextcord.Member): passed as the member that triggered the event
         """
 
-        await asyncio.sleep(30)
+        await asyncio.sleep(172800)
         role = nextcord.utils.get(member.guild.roles, name = verified_role_name)
 
-        if member.id in self.unverified:
-            del self.unverified[member.id]
+        if member.id in self.bot.unverified:
+            del self.bot.unverified[member.id]
 
             if member.id in self.bot.threat_scores: 
                 del self.bot.threat_scores[member.id]
@@ -215,7 +214,7 @@ class member_Events(commands.Cog):
         else:
             await self.bot.get_channel(mod_channel).send("GUILD SYSTEM CHANNEL NOT SET!\n" f"User: {member.name} has joined the server on {date.today()}")
 
-        self.unverified[member.id] = member.joined_at
+        self.bot.unverified[member.id] = member.joined_at
 
         score, action, is_bot, is_spam = await self.threat_score(member)
         self.bot.threat_scores[member.id] = {
@@ -248,5 +247,5 @@ class member_Events(commands.Cog):
 
 
 # Register the class/cog with the bot, supports loading/unloading although not currently implemented           
-def setup(bot: commands.Bot) -> None:
+def setup(bot: Bot) -> None:
     bot.add_cog(member_Events(bot))
