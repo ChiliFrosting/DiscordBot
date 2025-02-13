@@ -111,7 +111,7 @@ class member_Events(commands.Cog):
             score -= 5
 
         if member.pending is False:
-            score += 10
+            score -= 10
 
         if hypesquad_member in member.public_flags:
             score -= 10
