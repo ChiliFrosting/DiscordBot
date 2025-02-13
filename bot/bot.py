@@ -1,5 +1,5 @@
 
-""" This module is the main bot module """
+""" This is the main bot module """
 
 import os
 
