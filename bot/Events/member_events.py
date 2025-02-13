@@ -225,7 +225,6 @@ class member_Events(commands.Cog):
             "is_spam" : is_spam,
             "action" : action
         }
-        print(self.bot.threat_scores)
 
         await self.bot.get_channel(mod_channel).send(
             f"User: {member.name} has joined the server on {date.today()}\n"
@@ -235,6 +234,8 @@ class member_Events(commands.Cog):
             f"Recommended action: {action}"
         )
 
+        temp_channel = None
+
         if action == "Manual review":
             await self.bot.get_channel(mod_channel).send(
                 f"Auto Verification is disabled for {member.name}"
@@ -242,6 +243,7 @@ class member_Events(commands.Cog):
             temp_channel = await self.create_temp_channel(member)
 
         await self.verification_check(member)
+
         await self.delete_temp_channel(temp_channel)
 
 
