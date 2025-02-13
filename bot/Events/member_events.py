@@ -2,8 +2,8 @@
 """ This module contains all events relevant to guild/server members"""
 
 import asyncio
-from datetime import date
 import os
+from datetime import date
 
 import nextcord
 from bot.bot import Bot
@@ -54,7 +54,7 @@ class member_Events(commands.Cog):
                 )
 
 
-    async def threat_score(self, member: nextcord.Member) -> tuple[str, bool, bool]:
+    async def threat_score(self, member: nextcord.Member) -> tuple[int, str, bool, bool]:
         """
         This function assigns a score to the member which determines their ability to initiate 
         the verification flow automatically, require manual review or be kicked immediately
