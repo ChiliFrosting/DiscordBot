@@ -22,7 +22,7 @@ mod_channel= int(os.getenv("ADMIN_CHANNEL"))
 class Verify(commands.Cog):
     """ This class/cog is for the verification command """
 
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
     @nextcord.slash_command(name = "verify", guild_ids = [guild_id], description = "Start Verification")
@@ -57,9 +57,9 @@ class Verify(commands.Cog):
             try:
                 verify.disabled = True
                 await interaction.response.edit_message(view = verify_view)
-                await interaction.send("just a sec")
+                await interaction.send("just a sec", ephemeral = True)
                 await asyncio.sleep(3) # Sleep here fixes the occasional bug where role isn't added
-                await interaction.send("you're now verified!")
+                await interaction.send("you're now verified!", ephemeral = True)
                 await asyncio.sleep(3) # Sleep here fixes the occasional bug where role isn't added
                 await interaction.user.add_roles(role)
 
@@ -76,28 +76,32 @@ class Verify(commands.Cog):
         verify_view.add_item(verify)
 
         # Interaction response message when initiating the verification command, checks if channel is correct 
-        score = self.bot.threat_scores.get(interaction.user.id, {}).get("score")
+        score = self.bot.threat_scores.get(interaction.user.id, {}).get("score", 0)
         is_bot = self.bot.threat_scores.get(interaction.user.id, {}).get("is_bot")
         is_spam = self.bot.threat_scores.get(interaction.user.id, {}).get("is_spam")
 
-        if score < 20:
-            try:
-                if interaction.channel_id == verification_channel_id:
-                    if role not in interaction.user.roles:
-                        await interaction.send("By completing verification you are agreeing to the rules!", view = verify_view)
 
-                    else:
-                        await interaction.send("You're already verified", ephemeral = True)
+        try: 
+            if interaction.channel_id == verification_channel_id:
+                if role not in interaction.user.roles:
+
+                    if score < 20:
+                        await interaction.send("By completing verification you are agreeing to the rules!", view = verify_view, ephemeral = True)
+
+                    elif score >= 20 or is_bot is True or is_spam is True:
+                        await interaction.send("Sorry you're account has been flagged as suspicious, a private will be created with server moderators.", ephemeral = True)
+
                 else:
+                    await interaction.send("You're already verified", ephemeral = True)
 
-                    await interaction.send("Command cannot be used here!", ephemeral = True)
+            else: 
+                await interaction.send("This command cannot be used here", ephemeral = True)
 
-            except:
-                await interaction.send("Oops something went wrong, please contact administrator!")
-                self.bot.get_channel(mod_channel).send(f"something went wrong when verifying user: {interaction.user.global_name} aka {interaction.user.display_name} check terminal logging for details")
-
-        elif score >= 20 | is_bot is True | is_spam is True:
-            await interaction.send("Sorry you can't proceed with verification, a mod will contact you at channel shortly to add your role")
+        except Exception as e:
+            await interaction.send("Oops something went wrong, please contact a mod!", ephemeral = True)
+            await self.bot.get_channel(mod_channel).send(
+                f"The following error occurred while trying to verify {interaction.user.name}\n{e}"
+            )
             
 
 # Registers the class/cog with the bot, supports loading/unloading although not implemented currently            
