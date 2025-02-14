@@ -145,7 +145,7 @@ class member_Events(commands.Cog):
         temp_channel_name = f"{member.name}-verification-channel"
         permission_overwrites = {
             member.guild.default_role: nextcord.PermissionOverwrite(view_channel = False),
-            member: nextcord.PermissionOverwrite(view_channel = True)
+            member: nextcord.PermissionOverwrite(view_channel = True, send_messages = True)
         }
 
         #mod permissions here
