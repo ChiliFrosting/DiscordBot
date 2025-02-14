@@ -1,3 +1,4 @@
+
 """ This module contains all functions related to the websocket client for Twitch"""
 
 import asyncio
@@ -6,12 +7,12 @@ import os
 from datetime import datetime, timezone
 
 import aiohttp
+from bot.bot import bot
+from bot.async_events import OAuth_valid_event
 from dotenv import load_dotenv
 from twitch.websocket.websocket_message_queue import ws_message_queue
 from twitch.subscriptions.stream import stream_online, stream_info
 from twitch.subscriptions.users import user_info
-from bot.bot import bot
-from bot.async_events import OAuth_valid_event
 
 
 load_dotenv(override = True)
@@ -94,6 +95,7 @@ async def websocket_client(ws: aiohttp.ClientWebSocketResponse, session: aiohttp
 
                     case "session_keepalive":
                         print("Session keepalive frame received")
+                        
                         # TODO: add reconnection flow if keepalive frame not received when expected
                         keepalive_timestamp = (message_json["metadata"]["message_timestamp"])[:-2] + "Z"
 

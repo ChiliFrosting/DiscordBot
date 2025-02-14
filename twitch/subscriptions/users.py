@@ -3,6 +3,7 @@
 
 import aiohttp
 
+
 async def user_info(
         session: aiohttp.ClientSession,
         token: str,
@@ -20,9 +21,9 @@ async def user_info(
     `broadcaster_login` (str): Twitch username as in the URL, all lowercase
 
     ## Returns:
-    Tuple[[Optional[str], [Optional[str]]: None if broadcaster not found
-        - str: Twitch broadcaster ID
-        - str: Twitch broadcaster profile image URL
+        tuple[[Optional[str], [Optional[str]]: None if broadcaster not found
+            - str: Twitch broadcaster ID
+            - str: Twitch broadcaster profile image URL
     """
 
     headers = {

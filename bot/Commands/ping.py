@@ -1,13 +1,15 @@
+
 """ This module represents the ping command, will reply with Pong where ever its invoked """
 
 import os
 
-from dotenv import load_dotenv
 import nextcord
+from bot.bot import Bot
+from dotenv import load_dotenv
 from nextcord.ext import commands
 
 
-load_dotenv(override=True)
+load_dotenv(override = True)
 
 
 guild_id = int(os.getenv("SERVER_ID"))
@@ -24,7 +26,7 @@ class Ping(commands.Cog):
         guild_ids (list): List of guild/server IDs where the command should be used
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
 
     @nextcord.slash_command(name = "ping", description = "are you there?", guild_ids = [guild_id])
@@ -33,5 +35,5 @@ class Ping(commands.Cog):
 
 
 # Registers the ping class/cog with the bot, supports loading/unloading although not currently implemented
-def setup(bot):
+def setup(bot: Bot) -> None:
     bot.add_cog(Ping(bot))

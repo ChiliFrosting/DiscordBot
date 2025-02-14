@@ -1,11 +1,12 @@
-""" This module is the main bot module """
+
+""" This is the main bot module """
 
 import os
 
+import nextcord
 from bot.bot_responses import twitch_notification
 from bot.async_events import process_queue_event
 from dotenv import load_dotenv
-import nextcord
 from nextcord.ext import commands
 from twitch.websocket.websocket_message_queue import ws_message_queue
 
@@ -13,12 +14,29 @@ from twitch.websocket.websocket_message_queue import ws_message_queue
 load_dotenv(override= True)
 
 
+class Bot(commands.Bot):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Member score, keyed by member ID. Used in member_events
+        # Cleared after verification_check() is run
+        self.threat_scores = {}
+        
+        # Temporary verification channels, keyed by member ID. Used in member_events
+        # Cleared after verification_check() is run
+        self.temp_channels = {}
+
+        # Unverified members, keyed by member ID. Used in member_events
+        # Cleared after verification_check() is run
+        self.unverified = {}
+
+
 token = os.getenv("BOT_TOKEN")
 
 
 intents = nextcord.Intents.all()
 intents.members = True
-bot = commands.Bot(intents = intents)
+bot = Bot(intents = intents)
 
 
 status_channel = int(os.getenv("STATUS_CHANNEL"))

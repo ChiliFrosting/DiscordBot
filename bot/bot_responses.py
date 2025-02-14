@@ -48,11 +48,10 @@ async def twitch_notification(
         url = channel_url,
         icon_url = profile_image_url,
     )
-    embed.set_image(url = f"{stream_thumbnail}?t={int(time.time())}") # Time is used to bust the cache
+    embed.set_image(url = f"{stream_thumbnail}?t={int(time.time())}") # Time used for cache busting
     embed.add_field(name = "Game", value = stream_game)
     embed.set_footer(text = bot_name, icon_url = bot_icon)
     embed.timestamp = datetime.now(timezone.utc)
-
 
     button = nextcord.ui.Button(
         label = "Click me!",
@@ -63,6 +62,5 @@ async def twitch_notification(
 
     view = nextcord.ui.View()
     view.add_item(button)
-
 
     return embed, view

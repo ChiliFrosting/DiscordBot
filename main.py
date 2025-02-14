@@ -13,11 +13,11 @@ async def main() -> None:
     async with aiohttp.ClientSession() as session:
 
         await asyncio.gather(
-                bot_task(),
-                process_ws_queue(),
-                websocket_client_runtime(session),
-                token_validation_task(session),
-                start_app()
+            bot_task(),
+            process_ws_queue(),
+            websocket_client_runtime(session),
+            token_validation_task(session),
+            start_app()
         )
 
 

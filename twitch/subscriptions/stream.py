@@ -19,7 +19,7 @@ async def stream_online(
     The request is sent using POST via the Aiohtto client session instance "session"
 
     ## Args:
-    `session` (`aiohttp.ClientSession`): Aiohttp session instance
+    `session` (aiohttp.ClientSession): Aiohttp session instance
     `url` (str): Eventsub API subscriptions endpoint
     `token` (str): OAuth access token
     `client_id` (str): Twitch App client ID (provided by Twitch in the dev dashboard)
@@ -27,10 +27,10 @@ async def stream_online(
     `broadcaster_id` (str): Broadcaster ID of the channel to be subscribed to
 
     ## Returns:
-    Tuple[str, Optional[str], Optional[str]]:
-        - str: subscriptions status (enabled/disabled)
-        - str: subscription type (Refer to Twitch API docs on subscription types) or None 
-        - str: broadcaster user ID of the subscription or None 
+        tuple[str, Optional[str], Optional[str]]:
+            - str: subscriptions status (enabled/disabled)
+            - str: subscription type (Refer to Twitch API docs on subscription types) or None 
+            - str: broadcaster user ID of the subscription or None 
     """
 
     headers = {
@@ -85,13 +85,12 @@ async def stream_info(
     `broadcaster_id` (str): Broadcaster ID for whom stream information is requested
 
     ## Returns:
-    Tuple[Optional[str], [Optional[str], [Optional[str], [Optional[str], [Optional[str]]:
-    None if stream_type is not "live"
-        - str: streamed game name
-        - str: stream is live (type is live idk what else it could be, too lazy to look it up)
-        - str: stream title (duh)
-        - str: stream start time UTC
-        - str: stream thumbnail URL, provided by Twitch
+        tuple[Optional[str], [Optional[str], [Optional[str], [Optional[str], [Optional[str]]:
+            - str: streamed game name
+            - str: stream is live (type is live idk what else it could be, too lazy to look it up)
+            - str: stream title (duh)
+            - str: stream start time UTC
+            - str: stream thumbnail URL, provided by Twitch
     """
 
     headers = {
