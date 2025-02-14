@@ -3,10 +3,10 @@
 
 import os
 
+import nextcord
 from bot.bot_responses import twitch_notification
 from bot.async_events import process_queue_event
 from dotenv import load_dotenv
-import nextcord
 from nextcord.ext import commands
 from twitch.websocket.websocket_message_queue import ws_message_queue
 

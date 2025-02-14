@@ -1,13 +1,14 @@
+
 """ This module contains all events relevant to the bot """
 
 import os 
 
-from dotenv import load_dotenv
-from nextcord.ext import commands
 import nextcord
-
 import nextcord.ext
 import nextcord.ext.commands
+from bot.bot import Bot
+from dotenv import load_dotenv
+from nextcord.ext import commands
 
 
 load_dotenv(override = True)
@@ -21,8 +22,9 @@ presence_url = os.getenv("PRESENCE_URL")
 class bot_Events(commands.Cog):
     """ Class/Cog containing Bot related event listeners """
 
-    def __init__(self, bot):
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
+
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
@@ -36,5 +38,5 @@ class bot_Events(commands.Cog):
 
 
 # Registers the class/cog with the bot, supports loading/unloading although not implemented currently
-def setup(bot):
+def setup(bot: Bot) -> None:
     bot.add_cog(bot_Events(bot))

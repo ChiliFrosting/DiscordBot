@@ -1,28 +1,30 @@
+
 """ This module represents the verification command, guides new members through the verification flow """
 
 import asyncio
 import os
 
 import nextcord 
+from bot.bot import Bot
+from dotenv import load_dotenv
 from nextcord.ext import commands
 from nextcord import ButtonStyle
 from nextcord.ui import Button, View
-from dotenv import load_dotenv
 
 
 load_dotenv(override = True)
 
 
 guild_id = int(os.getenv("SERVER_ID"))
-verified_role_name= os.getenv("ROLE_NAME")
-verification_channel_id= int(os.getenv("VERIFY_CHANNEL_ID"))
-mod_channel= int(os.getenv("ADMIN_CHANNEL"))
+verified_role_name = os.getenv("ROLE_NAME")
+verification_channel_id = int(os.getenv("VERIFY_CHANNEL_ID"))
+mod_channel = int(os.getenv("ADMIN_CHANNEL"))
 
 
 class Verify(commands.Cog):
     """ This class/cog is for the verification command """
 
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
 
     @nextcord.slash_command(name = "verify", guild_ids = [guild_id], description = "Start Verification")
@@ -89,7 +91,9 @@ class Verify(commands.Cog):
                         await interaction.send("By completing verification you are agreeing to the rules!", view = verify_view, ephemeral = True)
 
                     elif score >= 20 or is_bot is True or is_spam is True:
-                        await interaction.send("Sorry you're account has been flagged as suspicious, a private will be created with server moderators.", ephemeral = True)
+                        await interaction.send(
+                            "Sorry you're account has been flagged as suspicious, a private channel will be created for you with server moderators.", ephemeral = True
+                        )
 
                 else:
                     await interaction.send("You're already verified", ephemeral = True)
@@ -102,8 +106,8 @@ class Verify(commands.Cog):
             await self.bot.get_channel(mod_channel).send(
                 f"The following error occurred while trying to verify {interaction.user.name}\n{e}"
             )
-            
+
 
 # Registers the class/cog with the bot, supports loading/unloading although not implemented currently            
-def setup(bot):
+def setup(bot: Bot) -> None:
     bot.add_cog(Verify(bot))

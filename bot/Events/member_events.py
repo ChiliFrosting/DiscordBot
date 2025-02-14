@@ -41,17 +41,17 @@ class member_Events(commands.Cog):
         if member.id in self.bot.unverified:
             del self.bot.unverified[member.id]
 
-            if member.id in self.bot.threat_scores: 
-                del self.bot.threat_scores[member.id]
+        if member.id in self.bot.threat_scores: 
+            del self.bot.threat_scores[member.id]
 
-            if member.id in self.bot.temp_channels:
-                del self.bot.temp_channels[member.id]
+        if member.id in self.bot.temp_channels:
+            del self.bot.temp_channels[member.id]
 
-            if role not in member.roles: 
-                await member.kick(reason = "Did not verify within grace period")
-                await self.bot.get_channel(mod_channel).send(
-                    f"Member {member.name} was kicked, did not complete verification within grace period."
-                )
+        if role not in member.roles: 
+            await member.kick(reason = "Did not verify within grace period")
+            await self.bot.get_channel(mod_channel).send(
+                f"Member {member.name} was kicked, did not complete verification within grace period."
+            )
 
 
     async def threat_score(self, member: nextcord.Member) -> tuple[int, str, bool, bool]:
@@ -158,8 +158,8 @@ class member_Events(commands.Cog):
         )
 
         self.bot.temp_channels[member.id] = {
-            "member name" : member.name, 
-            "channel name" : temp_channel_name
+            "member_name" : member.name, 
+            "channel_name" : temp_channel_name
         }
 
         await temp_channel.send(f"Hey, {member.mention} this is your temp verification channel.")
@@ -218,7 +218,7 @@ class member_Events(commands.Cog):
 
         score, action, is_bot, is_spam = await self.threat_score(member)
         self.bot.threat_scores[member.id] = {
-            "member name" : member.name,
+            "member_name" : member.name,
             "score" : score,
             "is_bot" : is_bot,
             "is_spam" : is_spam,

@@ -1,21 +1,23 @@
+
 """ This module represents the Delete messages command, this command deletes all messages in the channel its invoked in """
 
 import os
 from datetime import date
-from dotenv import load_dotenv
 
 import nextcord
+from bot.bot import Bot
+from dotenv import load_dotenv
 from nextcord.ext import commands
 from nextcord import ButtonStyle
 from nextcord.ui import Button, View
 
 
-load_dotenv(override=True)
+load_dotenv(override = True)
 
 
-guild_id= int(os.getenv("SERVER_ID"))
-mod_channel= int(os.getenv("ADMIN_CHANNEL"))
-mod_role_name= os.getenv("ADMIN_ROLE_NAME")
+guild_id = int(os.getenv("SERVER_ID"))
+mod_channel = int(os.getenv("ADMIN_CHANNEL"))
+mod_role_name = os.getenv("ADMIN_ROLE_NAME")
 
 
 class DelMsgs(commands.Cog):
@@ -35,7 +37,7 @@ class DelMsgs(commands.Cog):
         None
     """
     
-    def __init__(self, bot):
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
 
     @nextcord.slash_command(name = "delmsgs", guild_ids = [guild_id], description = "Delete all messages in the channel")
@@ -112,5 +114,5 @@ class DelMsgs(commands.Cog):
 
 
 # Registers the command Class/Cog with the bot
-def setup(bot):
+def setup(bot: Bot):
     bot.add_cog(DelMsgs(bot))
