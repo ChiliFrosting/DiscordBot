@@ -26,6 +26,31 @@ broadcaster_login = os.getenv("broadcaster_login")
 stream_info_endpoint = os.getenv("stream_info_endpoint")
 
 
+async def twitch_status(session: aiohttp.ClientSession) -> None:
+    status_url = "https://status.twitch.com/api/v2/components.json"
+
+    while True: 
+        try:
+            async with session(url = status_url) as response: 
+                response_json = await response.json()
+                
+                components = response_json["components"][0]
+                non_operational = []
+
+                for component in components:
+                    if component.get("status") == "operational": 
+                        non_operational.append(component)
+
+                print(non_operational)
+
+                break
+
+        except Exception as e:
+            print(f"Error occurred while checking status: {type(e).__name__} - {e}")
+
+            
+
+
 async def websocket_client_runtime(session: aiohttp.ClientSession) -> None:
     await bot.wait_until_ready()
     
@@ -34,6 +59,7 @@ async def websocket_client_runtime(session: aiohttp.ClientSession) -> None:
 
         try: 
             await OAuth_valid_event.wait()
+            await twitch_status(session = session)
 
             print(f"Connecting to websocket session @{websocket_url} . . . .")
             async with session.ws_connect(websocket_url) as ws:
