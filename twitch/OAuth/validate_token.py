@@ -45,7 +45,7 @@ async def token_validation_task(session: aiohttp.ClientSession) -> None:
             response_status = response.status
     
             if response_status == 200:
-                print("Access Token is valid")
+                print("Access Token is valid\n")
 
                 if not OAuth_valid_event.is_set():
                     OAuth_valid_event.set()

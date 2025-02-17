@@ -9,21 +9,34 @@ async def twitch_status() -> None:
     while True: 
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(url = status_url) as response: 
+                async with session.get(url = status_url) as response:
+
                     response_json = await response.json()
-                    services = ""
-                    for i in range(0, 7):
+                    services = response_json.get("components", [])
+                    non_operational = {}
+                    critical_services = ["Login", "Video (Broadcasting)", "API"]
 
-                        service = response_json["components"][i]["name"]
-                        status = response_json["components"][i]["status"]
-                        services += f"{service} -> {status}\n"
+                    for service in services:
+                        if service.get("status") != "operational":
+                            non_operational[service.get("name", "Unavailable")] = service.get("status", "Unavailable")
 
-                    print(services)
+                    if any(service in non_operational for service in critical_services):
+                        print("Unable to reach Twitch servers")
 
-                    break
+                        await asyncio.sleep(1800)
+
+                    else:
+                        print(
+                            f"Twitch services operational.\n"
+                            "Login -> OK\nAPI -> OK\nVideo (Broadcasting) -> OK"
+                        )
+                        break
+                            
 
         except Exception as e:
             print(f"Error occurred while checking status: {type(e).__name__} - {e}")
+            print("Retrying in 30 minutes....")
+            await asyncio.sleep(1800)
 
 
 asyncio.run(twitch_status())
