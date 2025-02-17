@@ -7,8 +7,8 @@ import os
 from datetime import datetime, timezone
 
 import aiohttp
-from bot.bot import bot
 from bot.async_events import OAuth_valid_event
+from bot.bot import bot
 from dotenv import load_dotenv
 from twitch.websocket.websocket_message_queue import ws_message_queue
 from twitch.subscriptions.stream import stream_online, stream_info
@@ -24,28 +24,37 @@ websocket_endpoint = os.getenv("twitch_cli_websocket")
 subscription_endpoint = os.getenv("twitch_cli_eventsub")
 broadcaster_login = os.getenv("broadcaster_login")
 stream_info_endpoint = os.getenv("stream_info_endpoint")
+status_url = os.getenv("STATUS_URL")
 
 
-async def websocket_client_runtime(session: aiohttp.ClientSession) -> None:
-    await bot.wait_until_ready()
-    
-    websocket_url = websocket_endpoint
-    while True: 
+async def twitch_status(session: aiohttp.ClientSession) -> None:
+    async with session.get(url = status_url) as response:
 
-        try: 
-            await OAuth_valid_event.wait()
+        try:
+            response_json = await response.json()
+            services = response_json.get("components", [])
+            non_operational = {}
+            critical_services = ["Login", "Video (Broadcasting)", "API"]
 
-            print(f"Connecting to websocket session @{websocket_url} . . . .")
-            async with session.ws_connect(websocket_url) as ws:
-                new_websocket_url= await websocket_client(ws, session)
-                if new_websocket_url: 
-                    print(f"Reconnecting to websocket session . . . .")
-                    #websocket_url= new_websocket_url
-                    
-        except Exception as e: 
-            print(f"Websocket error: {type(e).__name__} - {e}")
-            print("Retrying in 5 seconds . . . .")
-            await asyncio.sleep(5)
+            for service in services:
+                if service.get("status") != "operational":
+                    non_operational[service.get("name", "Unavailable")] = service.get("status", "Unavailable")
+
+            if any(service in non_operational for service in critical_services):
+                print("Unable to reach Twitch services")
+                await asyncio.sleep(1800)
+
+            else: 
+                print(
+                    "Twitch services operational.\nLogin -> OK\nAPI -> OK\nVideo (Broadcasting) -> OK\n"
+                )
+        
+        except Exception as e:
+            print(
+                f"Error occurred while checking status: {type(e).__name__} - {e}\n"
+                "Retrying in 30 minutes\n"
+            )
+            await asyncio.sleep(1800)
 
 
 async def websocket_client(ws: aiohttp.ClientWebSocketResponse, session: aiohttp.ClientSession) -> None:
@@ -178,3 +187,26 @@ async def websocket_client(ws: aiohttp.ClientWebSocketResponse, session: aiohttp
             case _:
                 print("Server closed the connection with no status code")
                 return
+         
+
+async def websocket_client_runtime(session: aiohttp.ClientSession) -> None:
+    await bot.wait_until_ready()
+    
+    websocket_url = websocket_endpoint
+    while True: 
+
+        try: 
+            await OAuth_valid_event.wait()
+            await twitch_status(session = session)
+
+            print(f"Connecting to websocket session @{websocket_url} . . . .")
+            async with session.ws_connect(websocket_url) as ws:
+                new_websocket_url= await websocket_client(ws, session)
+                if new_websocket_url: 
+                    print(f"Reconnecting to websocket session . . . .")
+                    #websocket_url= new_websocket_url
+                    
+        except Exception as e: 
+            print(f"Websocket error: {type(e).__name__} - {e}")
+            print("Retrying in 1 minute....")
+            await asyncio.sleep(60)
