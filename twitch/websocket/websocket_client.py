@@ -110,11 +110,11 @@ async def websocket_client(ws: aiohttp.ClientWebSocketResponse, session: aiohttp
 
                         print(f"Keepalive received at: {keepalive_timestamp}")
 
-                        time_now = datetime.now(timezone.utc)
+                        """time_now = datetime.now(timezone.utc)
                         keepalive_timestamp_datetime = datetime.strptime(keepalive_timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
                         keepalive_aware = keepalive_timestamp_datetime.replace(tzinfo = timezone.utc)
                         keepalive_delta = time_now - keepalive_aware
-                        print(f"last keepalive message @{keepalive_delta.total_seconds()}")
+                        print(f"last keepalive message @{keepalive_delta.total_seconds()}")"""
                         
 
                     case "notification":
