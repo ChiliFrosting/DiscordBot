@@ -60,7 +60,7 @@ async def twitch_status(session: aiohttp.ClientSession) -> None:
 async def websocket_client(ws: aiohttp.ClientWebSocketResponse, session: aiohttp.ClientSession) -> None:
     while True:
         
-        message = await ws.receive()
+        message = await asyncio.wait_for(ws.receive(), timeout = 60)
         match message.type:
 
             case aiohttp.WSMsgType.TEXT:
@@ -103,19 +103,7 @@ async def websocket_client(ws: aiohttp.ClientWebSocketResponse, session: aiohttp
                             (f"Unexpected error: Subscription request failed, Time: {datetime.now(timezone.utc)}")
 
                     case "session_keepalive":
-                        print("Session keepalive frame received")
-                        
-                        # TODO: add reconnection flow if keepalive frame not received when expected
-                        keepalive_timestamp = (message_json["metadata"]["message_timestamp"])[:-2] + "Z"
-
-                        print(f"Keepalive received at: {keepalive_timestamp}")
-
-                        """time_now = datetime.now(timezone.utc)
-                        keepalive_timestamp_datetime = datetime.strptime(keepalive_timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
-                        keepalive_aware = keepalive_timestamp_datetime.replace(tzinfo = timezone.utc)
-                        keepalive_delta = time_now - keepalive_aware
-                        print(f"last keepalive message @{keepalive_delta.total_seconds()}")"""
-                        
+                        pass
 
                     case "notification":
                         print(f"Stream.Online event notification received from endpoint: {websocket_endpoint}")
@@ -156,7 +144,7 @@ async def websocket_client(ws: aiohttp.ClientWebSocketResponse, session: aiohttp
                                 }
                             }
                         
-                        await ws_message_queue.put(ws_message)
+                        # await ws_message_queue.put(ws_message)
 
                     case "revocation":
                         print("authorization for subscription revoked")
@@ -205,7 +193,11 @@ async def websocket_client_runtime(session: aiohttp.ClientSession) -> None:
                 if new_websocket_url: 
                     print(f"Reconnecting to websocket session . . . .")
                     #websocket_url= new_websocket_url
-                    
+        
+        except asyncio.TimeoutError as e: 
+            print(f"Connection stale -> Asyncio Timeout Error\nAttempting Reconnect....")
+            await asyncio.sleep(5)
+
         except Exception as e: 
             print(f"Websocket error: {type(e).__name__} - {e}")
             print("Retrying in 1 minute....")
