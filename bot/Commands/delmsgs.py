@@ -107,7 +107,7 @@ class DelMsgs(commands.Cog):
             
             else:
                 await interaction.send("You do not have permission to use this command!", ephemeral = True)
-                await self.bot.get_channel(mod_channel).send(f"Unauthorized use of command by user: {interaction.user.global_name}")
+                # await self.bot.get_channel(mod_channel).send(f"Unauthorized use of command by user: {interaction.user.global_name}")
 
         except:
             await interaction.send("Oops something went wrong, please contact administrator!")

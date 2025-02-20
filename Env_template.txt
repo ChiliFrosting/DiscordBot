@@ -1,0 +1,37 @@
+
+--------- Make sure to name the file ".env" otherwise you'll have to change all instances of load_dotenv --------------
+
+
+# Discord -------------------------------------------------------------------------------------------------------------
+BOT_TOKEN = "Your discord provided application token here"
+SERVER_ID = "Server/Guild ID where the app, commands and events are"
+PRESENCE_ACTIVITY = "" # Set to what you like or leave empty. can be further adjusted from the bot_events.py file
+PRESENCE_URL = "" # URL adds a a button for the activity 
+VERIFY_CHANNEL_NAME = "Your verification channel name here"
+VERIFY_CHANNEL_ID = "Your verification channel ID"
+VERIFY_CHANNEL_URL = "your verification channel url"
+ADMIN_CHANNEL = "Mod/Admin channel here"
+STATUS_CHANNEL = "Your application status channel here"
+ROLE_ID = "Verified member role ID here"
+ROLE_NAME = "verified member role name here"
+ADMIN_ROLE_ID = "Mod/Admin role ID here"
+ADMIN_ROLE_NAME = "Mod/Admin role name here"
+ANNOUNCEMENT_CHANNEL = "Announcements channel here"
+LOG_CHANNEL = "Application admin log channel"
+
+# Twitch Websocket & Eventsub -----------------------------------------------------------------------------------------
+TWITCH_CLIENT_ID = "Your Twitch provided application client ID here"
+TWITCH_CLIENT_SECRET = "Client secret here - optional"
+TWITCH_OAUTH_TOKEN = "Leave empty & generate a Token from the browser"
+TWITCH_WEBSOCKET_SERVER = "wss://eventsub.wss.twitch.tv/ws{?keepalive_timeout_seconds={however many seconds you'd like a keep alive message}}"
+TWITCH_EVENTSUB_SUBSCRIPTIONS = "https://api.twitch.tv/helix/eventsub/subscriptions"
+TWITCH_BROADCASTER_LOGIN = "Streamer username, all lowercase (so many variations of this Twitch whyyyyy)"
+
+# Twitch CLI [Optional: for testing purposes if needed] ---------------------------------------------------------------
+# You can put anything you want here, as long as you don't use it
+
+TWITWCH_CLI_WEBSOCKET = "Twitch CLI tool mock websocket server endpoint"
+TWITCH_CLI_EVENTSUB = "Twitch CLI tool mock eventsub endpoint"
+TWITCH_CLI_MOCK_API = "CLI tool mock API endpoint"
+TWITCH_CLI_MOCK_API_STREAMS = "CLI tool mock API endpoint for stream info"
+TWITCH_CLI_MOCK_USER_ID = "CLI tool generated mock user ID here"
