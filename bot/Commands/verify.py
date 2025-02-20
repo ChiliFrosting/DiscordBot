@@ -104,7 +104,7 @@ class Verify(commands.Cog):
         except Exception as e:
             await interaction.send("Oops something went wrong, please contact a mod!", ephemeral = True)
             await self.bot.get_channel(mod_channel).send(
-                f"The following error occurred while trying to verify {interaction.user.name}\n{e}"
+                f"The following error occurred while trying to verify {interaction.user.name}\n{type(e).__name__} - {e}"
             )
 
 

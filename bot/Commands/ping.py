@@ -31,7 +31,7 @@ class Ping(commands.Cog):
 
     @nextcord.slash_command(name = "ping", description = "are you there?", guild_ids = [guild_id])
     async def ping(self, interaction: nextcord.Interaction) -> None:
-        await interaction.send("Pong!")
+        await interaction.send("Pong!", ephemeral = True)
 
 
 # Registers the ping class/cog with the bot, supports loading/unloading although not currently implemented

@@ -101,7 +101,7 @@ async def process_ws_queue() -> None:
             broadcaster_login= ws_message["content"]["broadcaster_login"]
             sub_type= ws_message["content"]["type"]
 
-            await bot.get_channel(status_channel).send(f"Eventsub subscription request sucessful!\nBroadcaster: {broadcaster_login}\nSubscription Type: {sub_type}")
+            # await bot.get_channel(status_channel).send(f"Eventsub subscription request sucessful!\nBroadcaster: {broadcaster_login}\nSubscription Type: {sub_type}")
             ws_message_queue.task_done()
 
         elif ws_message["message"] == "notification":
@@ -131,7 +131,7 @@ async def process_ws_queue() -> None:
 
         elif ws_message["message"] == "reconnect_request":
             reconnect_url= ws_message["content"]["reconnect_url"]
-            await bot.get_channel(log_channel).send(f"Eventsub reconnect request received . . . . reconnecting @{reconnect_url}")
+            # await bot.get_channel(log_channel).send(f"Eventsub reconnect request received . . . . reconnecting @{reconnect_url}")
             ws_message_queue.task_done()
 
 
@@ -139,7 +139,7 @@ async def process_ws_queue() -> None:
             broadcaster_login= ws_message["content"]["broadcaster_login"]
             sub_type= ws_message["content"]["type"]
             status= ws_message["content"]["status"]
-            await bot.get_channel(log_channel).send(f"Subscription authorization revoked for {broadcaster_login}\nStatus: {status} - Type: {sub_type}")
+            # await bot.get_channel(log_channel).send(f"Subscription authorization revoked for {broadcaster_login}\nStatus: {status} - Type: {sub_type}")
             ws_message_queue.task_done()
 
 
