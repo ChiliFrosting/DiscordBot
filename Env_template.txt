@@ -5,6 +5,8 @@
 # Discord -------------------------------------------------------------------------------------------------------------
 BOT_TOKEN = "Your discord provided application token here"
 SERVER_ID = "Server/Guild ID where the app, commands and events are"
+PRESENCE_ACTIVITY = "" # Set to what you like or leave empty. can be further adjusted from the bot_events.py file
+PRESENCE_URL = "" # URL adds a a button for the activity 
 VERIFY_CHANNEL_NAME = "Your verification channel name here"
 VERIFY_CHANNEL_ID = "Your verification channel ID"
 VERIFY_CHANNEL_URL = "your verification channel url"
