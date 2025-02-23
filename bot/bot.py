@@ -2,6 +2,7 @@
 """ This is the main bot module """
 
 import os
+import time 
 
 import nextcord
 from bot.bot_responses import twitch_notification
@@ -18,6 +19,7 @@ class Bot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
+        self.start_time = time.time()
         # Member score, keyed by member ID. Used in member_events
         # Cleared after verification_check() is run
         self.threat_scores = {}

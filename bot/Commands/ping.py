@@ -1,9 +1,13 @@
 
 """ This module represents the ping command, will reply with Pong where ever its invoked """
 
+import asyncio
+import datetime
 import os
+import time
 
 import nextcord
+import psutil
 from bot.bot import Bot
 from dotenv import load_dotenv
 from nextcord.ext import commands
@@ -31,7 +35,15 @@ class Ping(commands.Cog):
 
     @nextcord.slash_command(name = "ping", description = "are you there?", guild_ids = [guild_id])
     async def ping(self, interaction: nextcord.Interaction) -> None:
-        await interaction.send("Pong!", ephemeral = True)
+        await interaction.send(
+            f"Pong!\n"
+            f"Ping: {round(self.bot.latency*1000)}ms\n"
+            f"Uptime: {datetime.timedelta(seconds = int(time.time() - self.bot.start_time))}\n"
+            f"CPU Usage: {psutil.cpu_percent()}%\n"
+            f"Memory Usage: {psutil.virtual_memory().percent}%\n"
+            f"Active Tasks: {len(asyncio.all_tasks())}",
+            ephemeral = True
+        )
 
 
 # Registers the ping class/cog with the bot, supports loading/unloading although not currently implemented
