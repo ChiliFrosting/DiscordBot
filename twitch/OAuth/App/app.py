@@ -13,6 +13,11 @@ from bot.bot import bot
 env_file = dotenv.find_dotenv()
 dotenv.load_dotenv(env_file)
 
+twitch_config = {
+    "broadcaster" : "",
+    "channel" : ""
+}
+
 
 async def index_handler(request):
     """ Homepage """
@@ -56,6 +61,42 @@ async def token_handler(request):
         return web.json_response({"message" : "Bad Request"}, status = 400)
     
 
+async def get_channels(requeset):
+
+    bot_instance = requeset.app["bot"]
+    available_channels = []
+
+    for guild in bot_instance.guilds:
+        for channel in guild.text_channels:
+            available_channels.append({
+                "id" : channel.id,
+                "name" : f"{guild.name} - #{channel.name}"
+            })
+    print(f"Available Channels: {available_channels}")
+    return web.json_response(available_channels)
+
+
+async def save_config(request):
+
+    try: 
+        data = await request.json()
+        broadcaster = data.get("broadcaster")
+        channel_id = int(data.get("channel"))
+
+        twitch_config["broadcaster"] = broadcaster
+        twitch_config["channel"] = channel_id
+
+        return web.json_response({"message" : "Settings Updated!"}, status = 200)
+    
+    except Exception as e: 
+        return web.json_response({"message" : "Failed to Update Settings!"}, status = 400)
+
+
+async def twitch_settings_handler(request): 
+
+    return web.FileResponse("./twitch/Oauth/App/content/twitchSettings.html")
+
+
 async def init_app():
     """ Initialize app instance, add routes, methods & serve HTML files
     in the content directory.
@@ -70,6 +111,9 @@ async def init_app():
     app.router.add_get("/", index_handler)
     app.router.add_get("/redirect", redirect_handler)
     app.router.add_post("/token", token_handler)
+    app.router.add_get("/twitchSettings", twitch_settings_handler)
+    app.router.add_get("/get_channels", get_channels)
+    app.router.add_post("/save_config", save_config)
 
     return app
 
@@ -91,6 +135,7 @@ async def start_app():
     await asyncio.sleep(5)
 
     app = await init_app()
+    app["bot"] = bot
     Baserunner = web.AppRunner(app = app)
     await Baserunner.setup()
     site = web.TCPSite(runner = Baserunner, host = "localhost", port = 3000)
