@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset = "UTF-8">
+        <meta name = "viewport" content = "width=device-width, inital-scale=1.0">
+        <title>Twitch Configuration</title>
+    </head>
+
+    <body>
+        <h1>Twitch Configuration</h1>
+        <form id = "configForm">
+            <label for = "broadcaster">Enter the cannel name as displayed in the channel URL:</label>
+            <input type = "text" id = "broadcaster" name = "broadcaster" required>
+
+            <label for = "channel">Choose the Discord channel where notifications will be posted:</label>
+            <select id = "channel" name = "channel" required>
+
+            </select>
+            <button type = "submit">Save</button>
+        </form>
+        <script src = "content/scripts/discordChannels.js"></script>
+    </body>
+</html>
