@@ -14,7 +14,7 @@ from twitch.websocket.websocket_message_queue import ws_message_queue
 load_dotenv(override = True)
 
 
-async def token_validation_task(session: aiohttp.ClientSession) -> None:
+async def twitch_token_validation(session: aiohttp.ClientSession) -> None:
     """
     According to Twitch API requirements, all apps must validate their OAuth access token 
     hourly, this function does just that. This function runs concurrently with the others
