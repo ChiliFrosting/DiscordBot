@@ -5,7 +5,7 @@ import asyncio
 
 import aiohttp
 from twitch.websocket.websocket_client import websocket_client_runtime
-from twitch.validate_token import token_validation_task
+from twitch.validate_token import twitch_token_validation
 from app.app import start_app
 from bot.bot import bot_task, process_ws_queue
 
@@ -17,7 +17,7 @@ async def main() -> None:
             bot_task(),
             process_ws_queue(),
             websocket_client_runtime(session),
-            token_validation_task(session),
+            twitch_token_validation(session),
             start_app()
         )
 
