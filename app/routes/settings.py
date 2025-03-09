@@ -32,6 +32,21 @@ async def get_channels(request: web.Request) -> web.Response:
     return web.json_response(available_channels)
 
 
+@routes.get("/get_roles")
+async def get_roles(request: web.Request) -> web.Response:
+
+    bot_instance = request.app["bot"]
+    guild_roles = []
+
+    for guild in bot_instance.guilds:
+        for role in guild.roles:
+            guild_roles.append({
+                "name": role.name
+            })
+
+    print(f"Guild roles: {guild_roles}")
+
+    
 @routes.post("/save_settings")
 async def save_settings(request: web.Request) -> web.Response:
 
@@ -47,6 +62,8 @@ async def save_settings(request: web.Request) -> web.Response:
 
         twitch_config["broadcaster"] = broadcaster
         twitch_config["channel"] = channel_id
+
+        print(f"Channel set to: {broadcaster}\nText Channel set to: {channel_id}")
 
         return web.json_response({"message" : "Settings updated"}, status = 200)
     

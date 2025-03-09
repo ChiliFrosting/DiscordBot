@@ -1,5 +1,5 @@
 
-""" Twitch sepcific routes """
+""" Twitch related routes """
 
 import os
 import traceback

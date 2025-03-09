@@ -3,21 +3,40 @@
     <head>
         <meta charset = "UTF-8">
         <meta name = "viewport" content = "width=device-width, inital-scale=1.0">
-        <title>Twitch Configuration</title>
+        <title>Settings</title>
     </head>
 
     <body>
-        <h1>Twitch Configuration</h1>
-        <form id = "configForm">
+        <h1>Discord Settings</h1>
+        <form id="configForm">
+            <label for = "verifiedRole">The verified member role:</label>
+            <select id = "verifiedRole" name = "verifiedRole"></select>
+
+            <label for = "adminRole">Admin/Moderator role:</label>
+            <select id = "adminRole" name = "adminRole"></select>
+
+            <label for = "adminChannel">Admin/Moderation channel:</label>
+            <select id = "adminChannel" name = "adminChannel"></select>
+
+            <label for = "statusChannel">Bot Status Channel:</label>
+            <select id = "statusChannel" name = "statusChannel"></select>
+
+
+
+        <h1>Twitch Settings</h1>
             <label for = "broadcaster">Enter the cannel name as displayed in the channel URL:</label>
             <input type = "text" id = "broadcaster" name = "broadcaster" required>
 
-            <label for = "channel">Choose the Discord channel where notifications will be posted:</label>
-            <select id = "channel" name = "channel" required>
+            <label for = "announceChannel">Channel where notifications will be sent:</label>
+            <select id = "announceChannel" name = "announceChannel" required></select>
 
-            </select>
             <button type = "submit">Save</button>
         </form>
+        <p id="settings_response"></p>
+
+        <a href="/">
+            <button>Back</button>
+        </a>
         <script src = "content/scripts/discordChannels.js"></script>
     </body>
 </html>
