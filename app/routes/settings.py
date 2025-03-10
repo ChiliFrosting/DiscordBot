@@ -26,8 +26,6 @@ async def get_channels(request: web.Request) -> web.Response:
                 "id" : channel.id,
                 "name" : f"{guild.name} - #{channel.name}"
             })
-
-    print(f"Available Channels: {available_channels}")
     
     return web.json_response(available_channels)
 
@@ -41,29 +39,33 @@ async def get_roles(request: web.Request) -> web.Response:
     for guild in bot_instance.guilds:
         for role in guild.roles:
             guild_roles.append({
-                "name": role.name
+                "name": f"{role.name}"
             })
 
-    print(f"Guild roles: {guild_roles}")
+    return web.json_response(guild_roles)
 
-    
+
 @routes.post("/save_settings")
 async def save_settings(request: web.Request) -> web.Response:
 
-    twitch_config = {
+    post_config = {
         "broadcaster" : "",
-        "channel" : ""
+        "announceChannel" : "",
+        "verifiedRole" : "",
+        "adminRole" : "",
+        "adminChannel" : "",
+        "statusChannel" : ""
     }
 
     try: 
         data = await request.json()
         broadcaster = data.get("broadcaster")
-        channel_id = int(data.get("channel"))
+        channel_id = int(data.get("announceChannel"))
 
-        twitch_config["broadcaster"] = broadcaster
-        twitch_config["channel"] = channel_id
+        post_config["broadcaster"] = broadcaster
+        post_config["announceChannel"] = channel_id
 
-        print(f"Channel set to: {broadcaster}\nText Channel set to: {channel_id}")
+        print(post_config)
 
         return web.json_response({"message" : "Settings updated"}, status = 200)
     

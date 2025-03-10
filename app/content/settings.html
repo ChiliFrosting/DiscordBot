@@ -7,9 +7,10 @@
     </head>
 
     <body>
+
         <h1>Discord Settings</h1>
         <form id="configForm">
-            <label for = "verifiedRole">The verified member role:</label>
+            <label for = "verifiedRole">Verified member role:</label>
             <select id = "verifiedRole" name = "verifiedRole"></select>
 
             <label for = "adminRole">Admin/Moderator role:</label>
@@ -25,18 +26,22 @@
 
         <h1>Twitch Settings</h1>
             <label for = "broadcaster">Enter the cannel name as displayed in the channel URL:</label>
-            <input type = "text" id = "broadcaster" name = "broadcaster" required>
+            <input type = "text" id = "broadcaster" name = "broadcaster">
 
             <label for = "announceChannel">Channel where notifications will be sent:</label>
-            <select id = "announceChannel" name = "announceChannel" required></select>
+            <select id = "announceChannel" name = "announceChannel"></select>
 
             <button type = "submit">Save</button>
         </form>
+
         <p id="settings_response"></p>
 
         <a href="/">
             <button>Back</button>
         </a>
-        <script src = "content/scripts/discordChannels.js"></script>
+        <script src = "content/scripts/getDiscordChannels.js"></script>
+        <script src = "content/scripts/getDiscordRoles.js"></script>
+        <script src = "content/scripts/saveConfig.js"></script>
+
     </body>
 </html>
