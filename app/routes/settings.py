@@ -1,16 +1,20 @@
 
 """ Settings route """
 
+import os
 import traceback
 
+import dotenv
 from aiohttp import web
 
+env_file = dotenv.find_dotenv()
+dotenv.load_dotenv(env_file)
 
 routes = web.RouteTableDef()
 
+
 @routes.get("/settings")
 async def twitch_settings(request: web.Request) -> web.FileResponse:
-
     return web.FileResponse("app/content/settings.html")
 
 
@@ -26,7 +30,6 @@ async def get_channels(request: web.Request) -> web.Response:
                 "id" : channel.id,
                 "name" : f"{guild.name} - #{channel.name}"
             })
-    
     return web.json_response(available_channels)
 
 
@@ -41,36 +44,40 @@ async def get_roles(request: web.Request) -> web.Response:
             guild_roles.append({
                 "name": f"{role.name}"
             })
-
     return web.json_response(guild_roles)
 
 
 @routes.post("/save_settings")
 async def save_settings(request: web.Request) -> web.Response:
 
-    post_config = {
-        "broadcaster" : "",
-        "announceChannel" : "",
-        "verifiedRole" : "",
-        "adminRole" : "",
-        "adminChannel" : "",
-        "statusChannel" : ""
+    config_keys = {
+        "broadcaster",
+        "announceChannel",
+        "verifiedRole",
+        "adminRole",
+        "adminChannel",
+        "statusChannel"
     }
 
-    try: 
-        data = await request.json()
-        broadcaster = data.get("broadcaster")
-        channel_id = int(data.get("announceChannel"))
+    try:
+        response = await request.json()
 
-        post_config["broadcaster"] = broadcaster
-        post_config["announceChannel"] = channel_id
+        missing_keys = config_keys - response.keys()
+        extra_keys = response.keys() - config_keys
 
-        print(post_config)
-
+        if missing_keys or extra_keys:
+            print("Missing or unexpected keys")
+            return web.json_response({"message" : "Missing or unexpected keys"}, status = 400)
+        
+        os.environ["broadcaster_login"] = response.get("broadcaster")
+        os.environ["ANNOUNCEMENT_CHANNEL"] = response.get("announceChannel")
+        os.environ["ROLE_NAME"] = response.get("verifiedRole")
+        os.environ["ADMIN_ROLE_NAME"] = response.get("adminRole")
+        os.environ["ADMIN_CHANNEL"] = response.get("adminChannel")
+        os.environ["STATUS_CHANNEL"] = response.get("statusChannel")
+        
         return web.json_response({"message" : "Settings updated"}, status = 200)
     
     except Exception as e: 
         traceback.print_exception(e)
-        
         return web.json_response({"message" : "Failed to update settings"}, status = 400)
-    
