@@ -5,8 +5,9 @@ import asyncio
 
 from aiohttp import web
 from app.routes.base import routes as base_routes
+from app.routes.config import routes as config_routes
+from app.routes.discord import routes as discord_routes
 from app.routes.twitch import routes as twitch_routes
-from app.routes.settings import routes as settings_routes
 from bot.bot import bot
 
 
@@ -24,8 +25,9 @@ async def init_app():
 
     # Routes
     app.add_routes(base_routes)
+    app.add_routes(config_routes)
+    app.add_routes(discord_routes)
     app.add_routes(twitch_routes)
-    app.add_routes(settings_routes)
 
     return app
 
@@ -44,7 +46,7 @@ async def start_app():
     """
     
     await bot.wait_until_ready()
-    await asyncio.sleep(5)
+    # await asyncio.sleep(5)
 
     app = await init_app()
 

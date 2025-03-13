@@ -13,46 +13,14 @@ dotenv.load_dotenv(env_file)
 routes = web.RouteTableDef()
 
 
-@routes.get("/settings")
-async def twitch_settings(request: web.Request) -> web.FileResponse:
+@routes.get("/config")
+async def config(request: web.Request) -> web.FileResponse:
     """ This is the settings page """
-    return web.FileResponse("app/content/settings.html")
+    return web.FileResponse("app/content/config.html")
 
 
-@routes.get("/get_channels")
-async def get_channels(request: web.Request) -> web.Response:
-    """ Backend only route, fetch discord server text channels"""
-
-    bot_instance = request.app["bot"]
-    available_channels = []
-
-    for guild in bot_instance.guilds:
-        for channel in guild.text_channels:
-            available_channels.append({
-                "id" : channel.id,
-                "name" : f"{guild.name} - #{channel.name}"
-            })
-    return web.json_response(available_channels)
-
-
-@routes.get("/get_roles")
-async def get_roles(request: web.Request) -> web.Response:
-    """ Backend only route, fetch discord server roles """
-
-    bot_instance = request.app["bot"]
-    guild_roles = []
-
-    for guild in bot_instance.guilds:
-        for role in guild.roles:
-            guild_roles.append({
-                "name": f"{role.name}"
-            })
-    return web.json_response(guild_roles)
-
-
-@routes.post("/save_settings")
-
-async def save_settings(request: web.Request) -> web.Response:
+@routes.post("/save_config")
+async def save_config(request: web.Request) -> web.Response:
     """ 
     This route handles POST requests for updating bot configuration.
     POST request is sent/received via the saveConfig.js script.
