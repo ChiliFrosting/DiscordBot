@@ -1,19 +1,31 @@
 <!DOCTYPE html>
     <html lang = "en">
         <head>
+            <link rel="stylesheet" href="css/styleSheet.css">
             <meta charset = "UTF-8">
             <meta name = "viewport" content = "width=device-width, inital-scale=1.0">
             <title>Homepage</title>
         </head>
 
         <body>
-            <h1>Index Page</h1>
-            <a href="https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=gnltd0pal01dzp6uxogo36s83v4ygm&redirect_uri=http://localhost:3000/redirect&scope=">
-                <button>Click here to generate a new token!</button>
-            </a>
+            <nav>
+                <h1 class="">Home Icon here
+                    <button class="">Click me</button>
+                </h1>
+            </nav>
+            <aside>sidebar</aside>
 
-            <a href = "/config">
-                <button>Settings</button>
+            <main>
+                <h1>Index Page</h1>
+            </main>
+            
+            <a href="https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=gnltd0pal01dzp6uxogo36s83v4ygm&redirect_uri=http://localhost:3000/redirect&scope=">
+                <button class="button">Click here to generate a new token!</button>
             </a>
+            
+            <a href = "/config">
+                <button class="bg-blue-500 text-white py-1.5 px-3 rounded-xl hover:motion-preset-shake hover:motion-duration-300">Settings</button>
+            </a>
+            <footer>footer</footer>
         </body>
     </html>
