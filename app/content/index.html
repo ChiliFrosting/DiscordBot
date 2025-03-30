@@ -7,25 +7,40 @@
             <title>Homepage</title>
         </head>
 
-        <body>
-            <nav>
-                <h1 class="">Home Icon here
-                    <button class="">Click me</button>
-                </h1>
-            </nav>
-            <aside>sidebar</aside>
+        <body class="min-h-screen bg-gradient-to-br from-blue-950 via-purple-950 to-red-900">
+            <nav class="flex items-center justify-between min-w-full bg-gray-950/60 py-4 px-4 text-gray-400">
 
-            <main>
-                <h1>Index Page</h1>
-            </main>
-            
+                <!--Nav bar left-->
+               <div>
+                <a href="/"><button class="rounded-4xl py-1 px-3 hover:bg-gray-700/60 hover:text-white hover:translate-y-[-3px] transition-all">Home</button></a>
+                <a href="/config"><button class="rounded-4xl py-1 px-3 hover:bg-gray-700/60 hover:text-white hover:translate-y-[-3px] transition-all">Settings</button></a>
+                <a><button class="rounded-4xl py-1 px-3 hover:bg-gray-700/60 hover:text-white hover:translate-y-[-3px] transition-all">Service Status</button></a>
+               </div>
+
+                <!--Nav bar right-->
+                <a><button>Right side</button></a>
+            </nav>
+
+            <div class="flex items-center justify-around min-h-screen">
+                <div class="grid grid-cols-1 sm:grid-cols-3 bg-amber-500 gap-y-4 gap-x-1 p-5">
+                    <div class="text-white text-lg p-2 col-span-3 flex justify-around items-center">Server name & icon</div>
+
+                    <div class="text-white p-2 grid grid-cols-1">System box 1
+                        <div id = "ping-display" class="text-white">Ping: <span id = "ping-value">Loading...</span></div>
+                        <div class="text-white">Twitch</div>
+                        <div class="text-white">YouTube</div>
+                    </div>
+                    <div class="text-white p-2 flex justify-center items-center">System box 2</div>
+                    <div class="text-white p-2 flex justify-center items-center">System box 3</div>
+                </div>
+            </div>
             <a href="https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=gnltd0pal01dzp6uxogo36s83v4ygm&redirect_uri=http://localhost:3000/redirect&scope=">
-                <button class="button">Click here to generate a new token!</button>
+                <button>Click here to generate a new token!</button>
             </a>
             
-            <a href = "/config">
-                <button class="bg-blue-500 text-white py-1.5 px-3 rounded-xl hover:motion-preset-shake hover:motion-duration-300">Settings</button>
-            </a>
             <footer>footer</footer>
+
+            <script src="content/scripts/index.js"></script>
+            
         </body>
     </html>
